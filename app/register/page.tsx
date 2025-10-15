@@ -55,7 +55,7 @@ export default function RegisterPage() {
       />
       {err && <div className="text-sm text-red-600">{err}</div>}
       <button className="brand-btn w-full" disabled={loading} onClick={submit}>
-        {loading ? "Creating..." : "Create account"}
+        {loading ? "Creating account..." : "Create account"}
       </button>
       <p className="text-xs text-gray-500">
         Already have an account?{" "}
