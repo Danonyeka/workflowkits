@@ -1,0 +1,70 @@
+[
+  {
+    "slug": "project-charter-template",
+    "title": "Advanced Project Charter Template (Word + Google Docs)",
+    "category": "Templates",
+    "short": "Comprehensive Project Charter template with cover page, TOC, RACI, risk register & sign-off tables.",
+    "downloadFile": "/downloads/project-charter-template.zip",
+    "features": [
+      "Professional cover page & Table of Contents",
+      "Prebuilt sections: scope, deliverables, milestones, budget",
+      "RACI matrix, risk log & stakeholder analysis",
+      "Word & Google Docs compatible",
+      "Includes guidance notes & sample filled project (Ojinga Estate Road)"
+    ],
+    "testimonials": [
+      { "name": "Chika E.", "text": "Saved us hours in preparing formal project governance documents." },
+      { "name": "Chalie O.", "text": "Polished, complete, and ready for board-level presentation." }
+    ],
+    "cover": "/images/products/project-charter.png"
+  },
+  {
+    "slug": "project-risk-register-pro",
+    "title": "Project Risk Register Pro (Excel)",
+    "category": "Templates",
+    "short": "Comprehensive risk log with heatmaps, owners, and mitigations.",
+    "downloadFile": "/downloads/risk-register-pro.xlsx",
+    "features": [
+      "Dynamic heatmap",
+      "Probability x Impact scoring",
+      "Owner reminders (fields)",
+      "Mitigation tracking"
+    ],
+    "testimonials": [
+      { "name": "Chinedu K.", "text": "Exactly what we needed for stakeholder reviews." }
+    ],
+    "cover": "/images/products/risk-register.png"
+  },
+  {
+    "slug": "site-safety-journal",
+    "title": "Site Safety Journal (PDF + Notion Template)",
+    "category": "Journals",
+    "short": "Daily HSE observations, toolbox talks, and sign-offs.",
+    "downloadFile": "/downloads/site-safety-journal.zip",
+    "features": [
+      "Printable PDF",
+      "Notion journal template",
+      "Daily checklist pages"
+    ],
+    "testimonials": [
+      { "name": "Bola T.", "text": "Helps our supervisors stay consistent." }
+    ],
+    "cover": "/images/products/site-safety-journal.png"
+  },
+  {
+    "slug": "sops-for-admin-ops",
+    "title": "SOPs for Admin Ops (Word)",
+    "category": "E-Books",
+    "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
+    "downloadFile": "/downloads/admin-sops.docx",
+    "features": [
+      "Editable Word format",
+      "Process diagrams",
+      "Roles & responsibilities matrix"
+    ],
+    "testimonials": [
+      { "name": "Ifeanyi D.", "text": "Solid baseline for formalizing our ops." }
+    ],
+    "cover": "/images/products/admin-sops.png"
+  }
+]

@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light “paper” background with subtle blobs */
+body {
+  @apply text-ink-900 bg-gray-50;
+  background-image:
+    radial-gradient(24rem 24rem at 10% -10%, rgba(6,182,212,.10), transparent 60%),
+    radial-gradient(24rem 24rem at 90% -10%, rgba(245,158,11,.10), transparent 60%),
+    radial-gradient(120rem 80rem at 50% 120%, rgba(6,182,212,.06), transparent 60%);
+  background-attachment: fixed;
+}
+
+.container { @apply max-w-6xl mx-auto px-4; }
+
+/* Cards & surfaces */
+.surface      { @apply bg-white rounded-2xl shadow-soft border border-ink-200; }
+.surface-muted{ @apply bg-gray-50 rounded-2xl border border-ink-200; }
+
+/* Brand actions */
+.brand-btn{
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-white;
+  background-image: linear-gradient(90deg, #06B6D4, #22D3EE 50%, #F59E0B);
+  background-size: 200% 100%;
+  transition: background-position .25s ease, transform .05s ease;
+}
+.brand-btn:hover{ background-position: 100% 0; box-shadow: var(--tw-shadow), 0 6px 20px rgba(6,182,212,.25); }
+.brand-btn:active{ transform: translateY(1px); }
+
+.ghost-btn { @apply px-5 py-3 border rounded-xl hover:bg-white/60; }
+
+/* Section titles */
+.h1 { @apply text-4xl sm:text-5xl font-bold tracking-tight; }
+.h2 { @apply text-2xl sm:text-3xl font-semibold; }
+
+/* Pretty inputs */
+.input {
+  @apply w-full rounded-xl border border-ink-200 bg-white px-3 py-2 outline-none;
+  box-shadow: inset 0 1px 0 rgba(16,24,40,.04);
+}
+.input:focus { @apply ring-2 ring-brand/30 border-brand; }
+
+/* Utility for soft divider */
+.hr { @apply h-px bg-gradient-to-r from-transparent via-ink-200 to-transparent; }
+
+/* --- Marquee animation --- */
+.marquee {
+  animation: wk-marquee 24s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+@keyframes wk-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
