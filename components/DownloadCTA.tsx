@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 export default function DownloadCTA({ slug }: { slug: string }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathnameRaw = usePathname();
+  const pathname = pathnameRaw ?? "/"; // ✅ coerce null -> "/"
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ✅ NextAuth session returns { user: {...} } or null
   useEffect(() => {
     fetch("/api/auth/session", { credentials: "include" })
       .then((r) => r.json())
@@ -24,9 +24,7 @@ export default function DownloadCTA({ slug }: { slug: string }) {
     return (
       <button
         className="brand-btn"
-        onClick={() =>
-          router.push(`/register?next=${encodeURIComponent(pathname)}`)
-        }
+        onClick={() => router.push(`/register?next=${encodeURIComponent(pathname)}`)}
       >
         Create free account to download
       </button>
@@ -40,19 +38,15 @@ export default function DownloadCTA({ slug }: { slug: string }) {
       onClick={async () => {
         setLoading(true);
         try {
-          const res = await fetch(
-            `/api/free-download?slug=${encodeURIComponent(slug)}`,
-            { credentials: "include" } // ✅ send cookies for session
-          );
+          const res = await fetch(`/api/free-download?slug=${encodeURIComponent(slug)}`, {
+            credentials: "include",
+          });
 
-          // If server redirects (e.g., session expired), follow it
           if (res.redirected) {
             window.location.href = res.url;
             return;
           }
-
           if (!res.ok) {
-            // Try to surface server error message
             let msg = `HTTP ${res.status}`;
             try {
               const j = await res.json();
@@ -62,7 +56,6 @@ export default function DownloadCTA({ slug }: { slug: string }) {
             return;
           }
 
-          // ✅ Use Content-Disposition filename when available
           const cd = res.headers.get("Content-Disposition") || "";
           const m = cd.match(/filename="?(.*?)"?$/i);
           const filename = m?.[1] || "download";
