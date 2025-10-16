@@ -5,7 +5,7 @@ export function ProductCard({ product }: { product: any }) {
   return (
     <div className="surface overflow-hidden transition-shadow hover:shadow-hover h-full">
       {/* Fixed-height media to prevent giant cards */}
-      <div className="relative h-56 sm:h-64 md:h-72 bg-gray-50">
+      <div className="relative h-40 sm:h-44 md:h-48 bg-gray-50">
         <Image
           src={product.cover}
           alt={product.title}
