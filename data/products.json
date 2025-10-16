@@ -19,21 +19,22 @@
     "cover": "/images/products/project-charter.png"
   },
   {
-    "slug": "project-risk-register-pro",
-    "title": "Project Risk Register Pro (Excel)",
+    "slug": "project-execution-plan",
+    "title": "Project Execution Plan (MS Word)",
     "category": "Templates",
-    "short": "Comprehensive risk log with heatmaps, owners, and mitigations.",
-    "downloadFile": "/downloads/risk-register-pro.xlsx",
+    "short": "The **Project Execution Plan (PEP)** defines the overall strategy, organization, and methodologies for safely, efficiently, and successfully delivering the 70km Amaken Gas Trunkline Project in full compliance with technical, quality, schedule, cost, and HSSE objectives.",
+    "downloadFile": "/downloads/project-execution-plan.webp",
     "features": [
-      "Dynamic heatmap",
-      "Probability x Impact scoring",
-      "Owner reminders (fields)",
-      "Mitigation tracking"
+      "1. **Clear Execution Philosophy** – Defines the project’s strategic approach to safe, efficient, and quality-driven delivery.",
+      "2. **Structured Organization and Governance** – Establishes roles, responsibilities, and reporting lines for effective management.",
+      "3. **Integrated HSSE and Quality Framework** – Embeds safety, environmental, and quality requirements across all activities.", 
+      "4. **Comprehensive Construction and Commissioning Strategy** – Details the methods, sequencing, and control measures for field execution.",
+      "5. **Robust Project Controls and Risk Management** – Provides systems for cost, schedule, performance tracking, and risk mitigation."
     ],
     "testimonials": [
       { "name": "Chinedu K.", "text": "Exactly what we needed for stakeholder reviews." }
     ],
-    "cover": "/images/products/risk-register.png"
+    "cover": "/images/products/project-execution-plan.webp"
   },
   {
     "slug": "site-safety-journal",
