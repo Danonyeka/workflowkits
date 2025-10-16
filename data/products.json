@@ -22,7 +22,7 @@
     "slug": "project-execution-plan",
     "title": "Project Execution Plan (MS Word)",
     "category": "Templates",
-    "short": "The **Project Execution Plan (PEP)** defines the overall strategy, organization, and methodologies for safely, efficiently, and successfully delivering the 70km Amaken Gas Trunkline Project in full compliance with technical, quality, schedule, cost, and HSSE objectives.",
+    "short": "The Project Execution Plan (PEP) defines the overall strategy, organization, and methodologies for safely, efficiently, and successfully delivering the 70km Amaken Gas Trunkline Project in full compliance with technical, quality, schedule, cost, and HSSE objectives.",
     "downloadFile": "/downloads/project-execution-plan.webp",
     "features": [
       "1. **Clear Execution Philosophy** – Defines the project’s strategic approach to safe, efficient, and quality-driven delivery.",
@@ -32,7 +32,7 @@
       "5. **Robust Project Controls and Risk Management** – Provides systems for cost, schedule, performance tracking, and risk mitigation."
     ],
     "testimonials": [
-      { "name": "Chinedu K.", "text": "Exactly what we needed for stakeholder reviews." }
+      { "name": "Chinedu K.", "text": "Exactly what we needed to kick-start our upcoming project." }
     ],
     "cover": "/images/products/project-execution-plan.webp"
   },
