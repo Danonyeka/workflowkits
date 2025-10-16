@@ -21,7 +21,7 @@ export default function Home() {
 
       <CategoryNav />
 
-      <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {featured.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
