@@ -10,30 +10,58 @@ import { usePathname } from "next/navigation";
 const CartBadge = dynamic(() => import("./CartBadge"), { ssr: false });
 const AuthLinks = dynamic(() => import("./AuthLinks"), { ssr: false });
 
-/** Thin scrolling announcement bar (marquee) fixed at the very top */
+/** Scrolling announcement bar (marquee-like) using CSS keyframes */
 function AnnouncementBar() {
   return (
-    <div className="fixed inset-x-0 top-0 z-50 h-8 bg-brand text-white">
-      {/* Using <marquee> for simple, cross-browser scrolling without custom keyframes */}
-      <marquee
-        behavior="scroll"
-        direction="left"
-        scrollAmount={6}
-        className="h-8 leading-8 text-xs"
-      >
-        <span className="mx-6">
-          <strong>Secure Paystack checkout (NGN)</strong>
-        </span>
-        <span className="mx-6">
-          <strong>New:</strong> SOPs Pack
-        </span>
-        <span className="mx-6">
-          <strong>Weekly Deal:</strong> -15% on Journals (Fri–Sun)
-        </span>
-        <span className="mx-6">
-          <strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more
-        </span>
-      </marquee>
+    <div className="fixed inset-x-0 top-0 z-50 h-8 bg-brand text-white overflow-hidden">
+      <div className="relative h-8">
+        <div className="absolute inset-y-0 left-0 flex items-center">
+          <div className="marquee-track whitespace-nowrap text-xs leading-8 will-change-transform">
+            <span className="mx-6">
+              <strong>Secure Paystack checkout (NGN)</strong>
+            </span>
+            <span className="mx-6">
+              <strong>New:</strong> SOPs Pack
+            </span>
+            <span className="mx-6">
+              <strong>Weekly Deal:</strong> -15% on Journals (Fri–Sun)
+            </span>
+            <span className="mx-6">
+              <strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more
+            </span>
+            {/* duplicate for seamless loop */}
+            <span className="mx-6">
+              <strong>Secure Paystack checkout (NGN)</strong>
+            </span>
+            <span className="mx-6">
+              <strong>New:</strong> SOPs Pack
+            </span>
+            <span className="mx-6">
+              <strong>Weekly Deal:</strong> -15% on Journals (Fri–Sun)
+            </span>
+            <span className="mx-6">
+              <strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Local CSS for the marquee animation */}
+      <style jsx>{`
+        @keyframes wfk-marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .marquee-track {
+          display: inline-block;
+          padding-left: 100%;
+          animation: wfk-marquee 20s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
@@ -42,7 +70,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close mobile menu on route change and ESC
+  // Close mobile menu on route change and on ESC
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -54,7 +82,7 @@ export function Header() {
     <>
       <AnnouncementBar />
 
-      {/* Header sits *below* the marquee (top-8) and stays fixed */}
+      {/* Header sits below the bar (top-8) */}
       <header className="fixed inset-x-0 top-8 z-40 border-b border-gray-300 bg-gray-100/95 backdrop-blur">
         <div className="container flex h-16 items-center justify-between px-4">
           {/* Logo */}
