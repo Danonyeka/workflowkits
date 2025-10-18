@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 
 export default function DownloadCTA({ slug }: { slug: string }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const rawPath = usePathname();
+  const pathname = rawPath ?? "/"; // <- ensure string
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +24,9 @@ export default function DownloadCTA({ slug }: { slug: string }) {
     return (
       <button
         className="brand-btn"
-        onClick={() => router.push(`/register?next=${encodeURIComponent(pathname)}`)}
+        onClick={() =>
+          router.push(`/register?next=${encodeURIComponent(pathname)}`)
+        }
       >
         Create free account to download
       </button>
@@ -37,22 +40,21 @@ export default function DownloadCTA({ slug }: { slug: string }) {
       onClick={async () => {
         setLoading(true);
         const res = await fetch(
-          `/api/free-download?slug=${encodeURIComponent(slug)}&next=${encodeURIComponent(pathname)}`
+          `/api/free-download?slug=${encodeURIComponent(
+            slug
+          )}&next=${encodeURIComponent(pathname)}`
         );
-
         if (!res.ok) {
           setLoading(false);
           if (res.redirected) window.location.href = res.url;
           else alert("Could not start download");
           return;
         }
-
-        // stream to file
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = ""; // server provides filename
+        a.download = "";
         a.click();
         URL.revokeObjectURL(url);
         setLoading(false);
