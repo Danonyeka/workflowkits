@@ -26,10 +26,10 @@
     "file": "/downloads/project-execution-plan.docx",
     "features": [
       {"strong": "Clear Execution Philosophy", "rest":"– Defines the project’s strategic approach to safe, efficient, and quality-driven delivery."},
-      "**Structured Organization and Governance** – Establishes roles, responsibilities, and reporting lines for effective management.",
-      "**Integrated HSSE and Quality Framework** – Embeds safety, environmental, and quality requirements across all activities.",
-      "**Comprehensive Construction and Commissioning Strategy** – Details the methods, sequencing, and control measures for field execution.",
-      "**Robust Project Controls and Risk Management** – Provides systems for cost, schedule, performance tracking, and risk mitigation."
+      {"strong": "Structured Organization and Governance", "rest":" – Establishes roles, responsibilities, and reporting lines for effective management."},
+      {"strong": "Integrated HSSE and Quality Framework", "rest":" – Embeds safety, environmental, and quality requirements across all activities."},
+      {"strong": "Comprehensive Construction and Commissioning Strategy", "rest":" – Details the methods, sequencing, and control measures for field execution."},
+     {"strong": "Robust Project Controls and Risk Management", "rest":" – Provides systems for cost, schedule, performance tracking, and risk mitigation."}
     ],
     "testimonials": [
       { "name": "Chinedu K.", "text": "Exactly what we needed to kick-start our upcoming project." }
@@ -43,11 +43,11 @@
     "short": "An in-depth analysis of interface management challenges and lessons learned from the 70 km Amaken Gas Trunkline Project, highlighting best practices for successful EPC execution in brownfield environments.",
     "file": "/downloads/lessons-learned-journal.pdf",
     "features": [
-      "1. **Real-World Case Study:** Based on the 70 km Amaken Gas Trunkline Project, illustrating practical EPC interface challenges and solutions.",
-      "2. **Comprehensive Analysis:** Covers engineering, procurement, construction, and commissioning interfaces in brownfield settings.",
-      "3. **Structured Lessons Learned:** Extracts actionable insights on permits, tie-ins, change control, and multi-contractor coordination.",
-      "4. **Best Practice Frameworks:** Integrates recognized EPC interface management tools such as interface registers, readiness reviews, and responsibility matrices.",
-      "5. **Practical Recommendations:** Provides clear guidance for future brownfield projects to enhance safety, minimize rework, and deliver on schedule"
+      {"strong": "Real-World Case Study:", "rest":" Based on the 70 km Amaken Gas Trunkline Project, illustrating practical EPC interface challenges and solutions."},
+      {"strong": "Comprehensive Analysis:", "rest":" Covers engineering, procurement, construction, and commissioning interfaces in brownfield settings."},
+      {"strong": "Structured Lessons Learned:", "rest":" Extracts actionable insights on permits, tie-ins, change control, and multi-contractor coordination."},
+      {"strong": "Best Practice Frameworks:", "rest":" Integrates recognized EPC interface management tools such as interface registers, readiness reviews, and responsibility matrices."},
+      {"strong": "Practical Recommendations:", "rest":" Provides clear guidance for future brownfield projects to enhance safety, minimize rework, and deliver on schedule"}
     ],
     "testimonials": [
       { "name": "Emma T.", "text": "Helps our supervisors stay consistent." }
