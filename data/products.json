@@ -37,20 +37,22 @@
     "cover": "/images/products/project-execution-plan.webp"
   },
   {
-    "slug": "site-safety-journal",
-    "title": "Site Safety Journal (PDF + Notion Template)",
+    "slug": "lessons-learned-journal",
+    "title": "Lessons Learned from Managing EPC Interfaces in Brownfield Projects (PDF)",
     "category": "Journals",
-    "short": "Daily HSE observations, toolbox talks, and sign-offs.",
-    "downloadFile": "/downloads/site-safety-journal.zip",
+    "short": "An in-depth analysis of interface management challenges and lessons learned from the 70 km Amaken Gas Trunkline Project, highlighting best practices for successful EPC execution in brownfield environments.",
+    "downloadFile": "/downloads/lessons-learned-journal.pdf",
     "features": [
-      "Printable PDF",
-      "Notion journal template",
-      "Daily checklist pages"
+      "1. **Real-World Case Study:** Based on the 70 km Amaken Gas Trunkline Project, illustrating practical EPC interface challenges and solutions.",
+      "2. **Comprehensive Analysis:** Covers engineering, procurement, construction, and commissioning interfaces in brownfield settings.",
+      "3. **Structured Lessons Learned:** Extracts actionable insights on permits, tie-ins, change control, and multi-contractor coordination.",
+      "4. **Best Practice Frameworks:** Integrates recognized EPC interface management tools such as interface registers, readiness reviews, and responsibility matrices.",
+      "5. **Practical Recommendations:** Provides clear guidance for future brownfield projects to enhance safety, minimize rework, and deliver on schedule",
     ],
     "testimonials": [
-      { "name": "Bola T.", "text": "Helps our supervisors stay consistent." }
+      { "name": "Emma T.", "text": "Helps our supervisors stay consistent." }
     ],
-    "cover": "/images/products/site-safety-journal.png"
+    "cover": "/images/products/lessons-learned-journal.webp"
   },
   {
     "slug": "sops-for-admin-ops",
