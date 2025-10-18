@@ -25,7 +25,7 @@
     "short": "The Project Execution Plan (PEP) defines the overall strategy, organization, and methodologies for safely, efficiently, and successfully delivering the 70km Amaken Gas Trunkline Project in full compliance with technical, quality, schedule, cost, and HSSE objectives.",
     "file": "/downloads/project-execution-plan.docx",
     "features": [
-      {"strong": "Clear Execution Philosophy","rest": – Defines the project’s strategic approach to safe, efficient, and quality-driven delivery."},
+      {"strong": "Clear Execution Philosophy", "rest":"– Defines the project’s strategic approach to safe, efficient, and quality-driven delivery."},
       "**Structured Organization and Governance** – Establishes roles, responsibilities, and reporting lines for effective management.",
       "**Integrated HSSE and Quality Framework** – Embeds safety, environmental, and quality requirements across all activities.",
       "**Comprehensive Construction and Commissioning Strategy** – Details the methods, sequencing, and control measures for field execution.",
