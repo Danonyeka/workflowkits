@@ -25,12 +25,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <h1 className="h2">{product.title}</h1>
         <p className="text-gray-600">{product.short}</p>
 
-        <ul className="space-y-2 text-gray-700">
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
   {product.features?.map((f: any, i: number) => {
     if (typeof f === "string") {
       return <li key={i}>{f}</li>;
     }
-    // expected shape: { strong: string, rest?: string }
+    // { strong: string, rest?: string }
     return (
       <li key={i}>
         <span className="font-semibold">{f.strong}</span>
