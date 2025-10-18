@@ -4,7 +4,7 @@
     "title": "Advanced Project Charter Template (Word + Google Docs)",
     "category": "Templates",
     "short": "Comprehensive Project Charter template with cover page, TOC, RACI, risk register & sign-off tables.",
-    "downloadFile": "/downloads/project-charter-template.zip",
+    "file": "/downloads/project-charter-template.zip",
     "features": [
       "Professional cover page & Table of Contents",
       "Prebuilt sections: scope, deliverables, milestones, budget",
@@ -23,11 +23,11 @@
     "title": "Project Execution Plan (MS Word)",
     "category": "Templates",
     "short": "The Project Execution Plan (PEP) defines the overall strategy, organization, and methodologies for safely, efficiently, and successfully delivering the 70km Amaken Gas Trunkline Project in full compliance with technical, quality, schedule, cost, and HSSE objectives.",
-    "downloadFile": "/downloads/project-execution-plan.webp",
+    "file": "/downloads/project-execution-plan.docx",
     "features": [
       "1. **Clear Execution Philosophy** – Defines the project’s strategic approach to safe, efficient, and quality-driven delivery.",
       "2. **Structured Organization and Governance** – Establishes roles, responsibilities, and reporting lines for effective management.",
-      "3. **Integrated HSSE and Quality Framework** – Embeds safety, environmental, and quality requirements across all activities.", 
+      "3. **Integrated HSSE and Quality Framework** – Embeds safety, environmental, and quality requirements across all activities.",
       "4. **Comprehensive Construction and Commissioning Strategy** – Details the methods, sequencing, and control measures for field execution.",
       "5. **Robust Project Controls and Risk Management** – Provides systems for cost, schedule, performance tracking, and risk mitigation."
     ],
@@ -41,7 +41,7 @@
     "title": "Lessons Learned from Managing EPC Interfaces in Brownfield Projects (PDF)",
     "category": "Journals",
     "short": "An in-depth analysis of interface management challenges and lessons learned from the 70 km Amaken Gas Trunkline Project, highlighting best practices for successful EPC execution in brownfield environments.",
-    "downloadFile": "/downloads/lessons-learned-journal.pdf",
+    "file": "/downloads/lessons-learned-journal.pdf",
     "features": [
       "1. **Real-World Case Study:** Based on the 70 km Amaken Gas Trunkline Project, illustrating practical EPC interface challenges and solutions.",
       "2. **Comprehensive Analysis:** Covers engineering, procurement, construction, and commissioning interfaces in brownfield settings.",
@@ -59,7 +59,7 @@
     "title": "SOPs for Admin Ops (Word)",
     "category": "E-Books",
     "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
-    "downloadFile": "/downloads/admin-sops.docx",
+    "file": "/downloads/admin-sops.docx",
     "features": [
       "Editable Word format",
       "Process diagrams",
