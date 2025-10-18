@@ -4,7 +4,6 @@
     "title": "Advanced Project Charter Template (Word + Google Docs)",
     "category": "Templates",
     "short": "Comprehensive Project Charter template with cover page, TOC, RACI, risk register & sign-off tables.",
-    "file": "/downloads/project-charter-template.docx",
     "features": [
       "Professional cover page & Table of Contents",
       "Prebuilt sections: scope, deliverables, milestones, budget",
@@ -23,7 +22,6 @@
     "title": "Project Execution Plan (MS Word)",
     "category": "Templates",
     "short": "The Project Execution Plan (PEP) defines the overall strategy, organization, and methodologies for safely, efficiently, and successfully delivering the 70km Amaken Gas Trunkline Project in full compliance with technical, quality, schedule, cost, and HSSE objectives.",
-    "file": "/downloads/project-execution-plan.docx",
     "features": [
       {"strong": "Clear Execution Philosophy", "rest":"Defines the project’s strategic approach to safe, efficient, and quality-driven delivery."},
       {"strong": "Structured Organization and Governance", "rest":"Establishes roles, responsibilities, and reporting lines for effective management."},
@@ -41,7 +39,6 @@
     "title": "Lessons Learned from Managing EPC Interfaces in Brownfield Projects (PDF)",
     "category": "Journals",
     "short": "An in-depth analysis of interface management challenges and lessons learned from the 70 km Amaken Gas Trunkline Project, highlighting best practices for successful EPC execution in brownfield environments.",
-    "file": "/downloads/lessons-learned-journal.pdf",
     "features": [
       {"strong": "Real-World Case Study:", "rest":"Based on the 70 km Amaken Gas Trunkline Project, illustrating practical EPC interface challenges and solutions."},
       {"strong": "Comprehensive Analysis:", "rest":"Covers engineering, procurement, construction, and commissioning interfaces in brownfield settings."},
@@ -59,7 +56,6 @@
     "title": "SOPs for Admin Ops (Word)",
     "category": "E-Books",
     "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
-    "file": "/downloads/admin-sops.docx",
     "features": [
       "Editable Word format",
       "Process diagrams",
