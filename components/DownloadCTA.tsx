@@ -6,15 +6,14 @@ import { useEffect, useState } from "react";
 
 export default function DownloadCTA({ slug }: { slug: string }) {
   const router = useRouter();
-  const pathnameRaw = usePathname();
-  const pathname = pathnameRaw ?? "/"; // ✅ coerce null -> "/"
+  const pathname = usePathname();
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/session", { credentials: "include" })
+    fetch("/api/auth/session")
       .then((r) => r.json())
-      .then((d) => setAuthed(!!d?.user))
+      .then((d) => setAuthed(!!d.ok))
       .catch(() => setAuthed(false));
   }, []);
 
@@ -37,43 +36,26 @@ export default function DownloadCTA({ slug }: { slug: string }) {
       disabled={loading}
       onClick={async () => {
         setLoading(true);
-        try {
-          const res = await fetch(`/api/free-download?slug=${encodeURIComponent(slug)}`, {
-            credentials: "include",
-          });
+        const res = await fetch(
+          `/api/free-download?slug=${encodeURIComponent(slug)}&next=${encodeURIComponent(pathname)}`
+        );
 
-          if (res.redirected) {
-            window.location.href = res.url;
-            return;
-          }
-          if (!res.ok) {
-            let msg = `HTTP ${res.status}`;
-            try {
-              const j = await res.json();
-              if (j?.error) msg = j.error;
-            } catch {}
-            alert(`Could not start download: ${msg}`);
-            return;
-          }
-
-          const cd = res.headers.get("Content-Disposition") || "";
-          const m = cd.match(/filename="?(.*?)"?$/i);
-          const filename = m?.[1] || "download";
-
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-        } catch (e: any) {
-          alert(`Could not start download: ${e?.message || e}`);
-        } finally {
+        if (!res.ok) {
           setLoading(false);
+          if (res.redirected) window.location.href = res.url;
+          else alert("Could not start download");
+          return;
         }
+
+        // stream to file
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = ""; // server provides filename
+        a.click();
+        URL.revokeObjectURL(url);
+        setLoading(false);
       }}
     >
       {loading ? "Preparing…" : "Download"}
