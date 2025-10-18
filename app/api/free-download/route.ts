@@ -9,6 +9,7 @@ export const runtime = "nodejs"; // fs requires Node runtime
 const FILES: Record<string, string> = {
   // slug: filename in data/download
   "project-charter-template": "project_charter_template.docx",
+  "lessons-learned-journal": "lessons_learned_journal.pdf", 
 };
 
 export async function GET(req: NextRequest) {
