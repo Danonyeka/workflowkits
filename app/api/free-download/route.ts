@@ -2,77 +2,61 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createReadStream, statSync } from "fs";
 import path from "path";
-import { loadProducts } from "@/lib/loadProducts";
+
+// If you prefer, you can use your loadProducts() helper instead
+import products from "@/data/products.json";
 
 export const runtime = "nodejs";
 
-// (Optional) legacy overrides if you want to force-map a few slugs:
-const FILES_OVERRIDE: Record<string, string> = {
-  // "project-charter-template": "project_charter_template.docx",
-};
-
-const CT: Record<string, string> = {
-  ".pdf": "application/pdf",
-  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ".zip": "application/zip",
-};
-
-function contentTypeFor(filename: string) {
-  const ext = path.extname(filename).toLowerCase();
-  return CT[ext] || "application/octet-stream";
-}
-
 export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const slug = (url.searchParams.get("slug") || "").trim();
+
+  if (!slug) {
+    return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+  }
+
+  const product = (products as any[]).find((p) => p.slug === slug);
+
+  if (!product || !product.file) {
+    return NextResponse.json({ error: "Unknown slug or file missing" }, { status: 404 });
+  }
+
+  const fileRef: string = product.file;
+
+  // 1) PUBLIC FILES (e.g., /public/downloads/...)  -> redirect with ABSOLUTE URL
+  if (fileRef.startsWith("/")) {
+    // Build an absolute URL based on the request origin
+    const absolute = new URL(fileRef, url.origin); // <- fixes the “relative URL” error
+    return NextResponse.redirect(absolute.toString(), { status: 302 });
+  }
+
+  // 2) PRIVATE/LOCAL FILES (e.g., a plain filename in /data/download)
+  //    Stream the file from the filesystem
   try {
-    const url = new URL(req.url);
-    const slug = (url.searchParams.get("slug") || "").trim();
+    const filePath = path.join(process.cwd(), "data", "download", fileRef);
+    const stat = statSync(filePath);
+    const stream = createReadStream(filePath);
 
-    if (!slug) {
-      return NextResponse.json({ ok: false, error: "Unknown or missing slug" }, { status: 400 });
-    }
-
-    // 1) Try override first
-    let fileRef: string | undefined = FILES_OVERRIDE[slug];
-
-    // 2) Else read from products.json
-    if (!fileRef) {
-      const products = (loadProducts() as any[]) || [];
-      const product = products.find((p) => p.slug === slug);
-      if (!product) {
-        return NextResponse.json({ ok: false, error: "Product not found" }, { status: 404 });
-      }
-      fileRef =
-        product.file ||
-        (Array.isArray(product.files) && product.files.length > 0 ? product.files[0] : undefined);
-    }
-
-    if (!fileRef) {
-      return NextResponse.json({ ok: false, error: "No file configured for this product" }, { status: 500 });
-    }
-
-    // If fileRef starts with '/', treat as /public asset and redirect
-    if (fileRef.startsWith("/")) {
-      // Example: "/downloads/lessons-learned-journal.pdf"
-      return NextResponse.redirect(fileRef);
-    }
-
-    // Otherwise stream from /data/download (bundled file path)
-    const filename = fileRef;
-    const diskPath = path.join(process.cwd(), "data", "download", filename);
-    const stat = statSync(diskPath); // throws if not found
-    const stream = createReadStream(diskPath);
+    const lower = fileRef.toLowerCase();
+    const contentType =
+      lower.endsWith(".pdf")
+        ? "application/pdf"
+        : lower.endsWith(".docx")
+        ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        : lower.endsWith(".zip")
+        ? "application/zip"
+        : "application/octet-stream";
 
     return new NextResponse(stream as any, {
       headers: {
-        "Content-Type": contentTypeFor(filename),
+        "Content-Type": contentType,
         "Content-Length": String(stat.size),
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": `attachment; filename="${path.basename(fileRef)}"`,
         "Cache-Control": "no-store",
       },
     });
   } catch (e: any) {
-    const msg = e?.code === "ENOENT" ? "File not found on disk" : e?.message || "Download error";
-    return NextResponse.json({ ok: false, error: msg }, { status: 404 });
+    return NextResponse.json({ error: "File not found", detail: e?.message }, { status: 404 });
   }
 }
