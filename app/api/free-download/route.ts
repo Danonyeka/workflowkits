@@ -2,61 +2,84 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createReadStream, statSync } from "fs";
 import path from "path";
-
-// If you prefer, you can use your loadProducts() helper instead
-import products from "@/data/products.json";
+import { getSession } from "@/lib/session";
+import { Resend } from "resend";
 
 export const runtime = "nodejs";
+
+// Map slugs -> filenames under /data/download
+const FILES: Record<string, string> = {
+  "project-charter-template": "project_charter_template.docx",
+  "project-execution-plan": "project-execution-plan.docx",
+  "lessons-learned-journal": "lessons-learned-journal.pdf",
+  "sops-for-admin-ops": "admin-sops.docx",
+};
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const slug = (url.searchParams.get("slug") || "").trim();
+  const next = url.searchParams.get("next") || `/products/${slug}`;
 
-  if (!slug) {
-    return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+  // 1) Auth gate
+  const session = getSession(req);
+  if (!session) {
+    // Hard redirect to register with ?next=<current>
+    return NextResponse.redirect(
+      new URL(`/register?next=${encodeURIComponent(next)}`, url),
+      302
+    );
   }
 
-  const product = (products as any[]).find((p) => p.slug === slug);
-
-  if (!product || !product.file) {
-    return NextResponse.json({ error: "Unknown slug or file missing" }, { status: 404 });
+  // 2) Guard slug
+  const filename = FILES[slug];
+  if (!slug || !filename) {
+    return NextResponse.json({ error: "Unknown or missing slug" }, { status: 400 });
   }
 
-  const fileRef: string = product.file;
-
-  // 1) PUBLIC FILES (e.g., /public/downloads/...)  -> redirect with ABSOLUTE URL
-  if (fileRef.startsWith("/")) {
-    // Build an absolute URL based on the request origin
-    const absolute = new URL(fileRef, url.origin); // <- fixes the “relative URL” error
-    return NextResponse.redirect(absolute.toString(), { status: 302 });
-  }
-
-  // 2) PRIVATE/LOCAL FILES (e.g., a plain filename in /data/download)
-  //    Stream the file from the filesystem
+  // 3) Email the user a link (fire-and-forget best effort)
   try {
-    const filePath = path.join(process.cwd(), "data", "download", fileRef);
+    if (process.env.RESEND_API_KEY && process.env.RESEND_FROM) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const site = process.env.NEXT_PUBLIC_SITE_URL || `${url.protocol}//${url.host}`;
+      const link = `${site}/api/free-download?slug=${encodeURIComponent(slug)}&next=${encodeURIComponent(next)}`;
+      await resend.emails.send({
+        from: process.env.RESEND_FROM!,
+        to: session.email,
+        subject: "Your download from WorkflowKits",
+        html: `<p>Hi,</p>
+               <p>You requested <strong>${slug}</strong>. If you ever need it again, you can download it here:</p>
+               <p><a href="${link}">${link}</a></p>
+               <p>Thanks!</p>`,
+      });
+    }
+  } catch {
+    // don't block the download if email fails
+  }
+
+  // 4) Stream the file
+  const filePath = path.join(process.cwd(), "data", "download", filename);
+  try {
     const stat = statSync(filePath);
     const stream = createReadStream(filePath);
 
-    const lower = fileRef.toLowerCase();
-    const contentType =
-      lower.endsWith(".pdf")
-        ? "application/pdf"
-        : lower.endsWith(".docx")
-        ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        : lower.endsWith(".zip")
-        ? "application/zip"
-        : "application/octet-stream";
+    const contentType = filename.toLowerCase().endsWith(".docx")
+      ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      : filename.toLowerCase().endsWith(".pdf")
+      ? "application/pdf"
+      : "application/octet-stream";
 
     return new NextResponse(stream as any, {
       headers: {
         "Content-Type": contentType,
         "Content-Length": String(stat.size),
-        "Content-Disposition": `attachment; filename="${path.basename(fileRef)}"`,
+        "Content-Disposition": `attachment; filename="${filename}"`,
         "Cache-Control": "no-store",
       },
     });
   } catch (e: any) {
-    return NextResponse.json({ error: "File not found", detail: e?.message }, { status: 404 });
+    return NextResponse.json(
+      { error: "File not found", detail: e?.message },
+      { status: 404 }
+    );
   }
 }
