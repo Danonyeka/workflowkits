@@ -1,66 +1,42 @@
-// components/DownloadCTA.tsx
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function DownloadCTA({ slug }: { slug: string }) {
+  const [sending, setSending] = useState(false);
   const router = useRouter();
-  const rawPath = usePathname();
-  const pathname = rawPath ?? "/"; // <- ensure string
-  const [authed, setAuthed] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(false);
+  const pathname = usePathname() || "/";
 
-  useEffect(() => {
-    fetch("/api/auth/session")
-      .then((r) => r.json())
-      .then((d) => setAuthed(!!d.ok))
-      .catch(() => setAuthed(false));
-  }, []);
+  const sendLink = async () => {
+    try {
+      setSending(true);
+      const res = await fetch("/api/send-download-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug }),
+      });
 
-  if (authed === null) return null;
+      if (res.status === 401) {
+        // not logged in -> take to register/login with return path
+        router.push(`/register?next=${encodeURIComponent(pathname)}`);
+        return;
+      }
 
-  if (!authed) {
-    return (
-      <button
-        className="brand-btn"
-        onClick={() =>
-          router.push(`/register?next=${encodeURIComponent(pathname)}`)
-        }
-      >
-        Create free account to download
-      </button>
-    );
-  }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to send");
+
+      alert("Download link sent to your email 🎉");
+    } catch (e: any) {
+      alert(e?.message || "Could not send link");
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
-    <button
-      className="brand-btn"
-      disabled={loading}
-      onClick={async () => {
-        setLoading(true);
-        const res = await fetch(
-          `/api/free-download?slug=${encodeURIComponent(
-            slug
-          )}&next=${encodeURIComponent(pathname)}`
-        );
-        if (!res.ok) {
-          setLoading(false);
-          if (res.redirected) window.location.href = res.url;
-          else alert("Could not start download");
-          return;
-        }
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "";
-        a.click();
-        URL.revokeObjectURL(url);
-        setLoading(false);
-      }}
-    >
-      {loading ? "Preparing…" : "Download"}
+    <button className="brand-btn" onClick={sendLink} disabled={sending}>
+      {sending ? "Sending link..." : "Email me the download link"}
     </button>
   );
 }
