@@ -5,14 +5,8 @@ import { getSession } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-/**
- * IMPORTANT for EU region:
- * Your domain is in Ireland (eu-west-1). Point the SDK to EU API.
- * If your Resend domain were US, remove the baseUrl option.
- */
-const resend = new Resend(process.env.RESEND_API_KEY, {
-  baseUrl: "https://api.eu.resend.com",
-});
+// Your installed 'resend' SDK accepts only the apiKey argument.
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -27,11 +21,11 @@ export async function GET(req: NextRequest) {
     process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://workflowkits.com";
   const from = process.env.RESEND_FROM?.trim(); // e.g. WorkflowKits <noreply@workflowkits.com>
 
-  // Who are we emailing?
+  // recipient: logged-in user or ?to= override for testing
   const session = getSession();
   const to = toOverride || session?.email || "";
 
-  // Helpful env validation so you get clear messages instead of generic errors
+  // Helpful validations
   if (!process.env.RESEND_API_KEY) {
     return NextResponse.json(
       { ok: false, error: "Missing RESEND_API_KEY env var" },
@@ -73,13 +67,11 @@ export async function GET(req: NextRequest) {
       to,
       from,
       siteUrl,
-      euApi: "https://api.eu.resend.com",
       id: data?.id,
       error,
     });
 
     if (error) {
-      // Bubble up the exact Resend error so you can see it in the alert
       return NextResponse.json(
         { ok: false, to, slug, fileUrl, resendError: error },
         { status: 500 }
