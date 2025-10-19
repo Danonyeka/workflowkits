@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 // Map product slug -> filename (put files under data/download)
 const FILES: Record<string, string> = {
-  "project-charter-template": "project_charter_template.docx",
+  "project-charter-template": "project-charter-template.docx",
   "project-execution-plan": "project-execution-plan.docx",
   "lessons-learned-journal": "lessons-learned-journal.pdf",
   "sops-for-admin-ops": "admin-sops.docx",
