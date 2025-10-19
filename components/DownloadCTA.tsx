@@ -9,13 +9,22 @@ export default function DownloadCTA({ slug }: { slug: string }) {
   const pathname = usePathname() || "/";
 
   const sendLink = async () => {
-    if (!slug) return;
+    if (!slug || sending) return;
     setSending(true);
 
     try {
-      // hit the email API (GET so you can test in the browser, too)
       const url = `/api/email-download?slug=${encodeURIComponent(slug)}`;
-      const res = await fetch(url, { method: "GET" });
+
+      const res = await fetch(url, {
+        method: "GET",
+        // ensure auth cookie (wk_session) is sent
+        credentials: "include",
+        // avoid stale caches / CDNs
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+        // if middleware issues a redirect, don't follow — handle explicitly
+        redirect: "manual",
+      });
 
       if (res.status === 401) {
         // not logged in -> take to register/login with return path
@@ -23,7 +32,13 @@ export default function DownloadCTA({ slug }: { slug: string }) {
         return;
       }
 
-      const data = await res.json();
+      // If something tried to redirect, treat as unauth
+      if (res.type === "opaqueredirect" || res.status === 307 || res.status === 308) {
+        router.push(`/register?next=${encodeURIComponent(pathname)}`);
+        return;
+      }
+
+      const data = await res.json().catch(() => ({} as any));
 
       if (!res.ok || !data?.ok) {
         const msg =
@@ -34,10 +49,7 @@ export default function DownloadCTA({ slug }: { slug: string }) {
         return;
       }
 
-      // success with helpful details for verification
-      alert(
-        `Email queued ✅\nTo: ${data.to}\nMessage ID: ${data.id ?? "(none)"}`
-      );
+      alert(`Email queued ✅\nTo: ${data.to}\nMessage ID: ${data.id ?? "(none)"}`);
     } catch (e: any) {
       alert(e?.message || "Could not send link");
     } finally {
