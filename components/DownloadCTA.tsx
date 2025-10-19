@@ -9,13 +9,13 @@ export default function DownloadCTA({ slug }: { slug: string }) {
   const pathname = usePathname() || "/";
 
   const sendLink = async () => {
+    if (!slug) return;
+    setSending(true);
+
     try {
-      setSending(true);
-      const res = await fetch("/api/send-download-link", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
-      });
+      // hit the email API (GET so you can test in the browser, too)
+      const url = `/api/email-download?slug=${encodeURIComponent(slug)}`;
+      const res = await fetch(url, { method: "GET" });
 
       if (res.status === 401) {
         // not logged in -> take to register/login with return path
@@ -24,9 +24,20 @@ export default function DownloadCTA({ slug }: { slug: string }) {
       }
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to send");
 
-      alert("Download link sent to your email 🎉");
+      if (!res.ok || !data?.ok) {
+        const msg =
+          data?.error ||
+          data?.message ||
+          `Failed to send download link (status ${res.status})`;
+        alert(`Email failed ❌\n${msg}\nTo: ${data?.to ?? "unknown"}`);
+        return;
+      }
+
+      // success with helpful details for verification
+      alert(
+        `Email queued ✅\nTo: ${data.to}\nMessage ID: ${data.id ?? "(none)"}`
+      );
     } catch (e: any) {
       alert(e?.message || "Could not send link");
     } finally {
