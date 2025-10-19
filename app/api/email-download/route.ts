@@ -17,6 +17,7 @@ const FILES: Record<string, string> = {
   "lessons-learned-journal": "lessons-learned-journal.pdf",
 };
 
+
 function titleFromSlug(slug: string) {
   const map: Record<string, string> = {
     "project-charter-template": "Advanced Project Charter Template",
