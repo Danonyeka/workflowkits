@@ -9,7 +9,7 @@ export const runtime = "nodejs"; // fs requires Node runtime
 
 // If you want to support ?slug=<slug> fallback, map it here.
 const FILES: Record<string, string> = {
-  "project-charter-template": "project_charter_template.docx",
+  "project-charter-template": "project-charter-template.docx",
   "project-execution-plan": "project-execution-plan.docx",
   "lessons-learned-journal": "lessons-learned-journal.pdf",
   // add others...
