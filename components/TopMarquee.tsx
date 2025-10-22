@@ -4,9 +4,13 @@ import Link from "next/link";
 
 const items = [
   { text: "Instant digital downloads", href: "/catalog" },
-  { text: "Secure Paystack checkout (NGN)" },
+  { text: "Free Project Management Templates, Plans, Journals, E-books and a lot more" },
   { text: "New: SOPs Pack", href: "/products/sops-for-admin-ops" },
   { text: "Weekly Deal: -15% on Journals (Fri–Sun)", href: "/categories/Journals" },
+  { text: "No checkout. Just login → get the file", href: "/catalog" },
+  { text: "Templates, journals & e-books—100% free after login." },
+  { text: "New here? Register free and start downloading in seconds." },
+  { text: "Fill free to checkout some of our impresive tools", href: "/categories/Tools" },
 ];
 
 export default function TopMarquee() {
