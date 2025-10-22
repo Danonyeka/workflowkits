@@ -51,6 +51,26 @@
     ],
     "cover": "/images/products/lessons-learned-journal.webp"
   },
+   {
+    "slug": "project-execution-strategy",
+    "title": "PROJECT EXECUTION STRATEGY — ASSESS (EARLY) STAGE for Niger Delta Gas Infrastructure Expansion (NDGIE) Project (PDF)",
+    "category": "Template",
+    "short": "The NDGIE Project Execution Strategy outlines the structured approach to deliver gas infrastructure efficiently, safely, and in alignment with regulatory and stakeholder expectations.",
+    "features": [
+      {"strong": "Integrated Delivery Approach", "rest": "Seamlessly connects gas gathering, processing, power generation, and export."},
+      {"strong": "High Local Content Emphasis", "rest": "Prioritizes Nigerian participation in EPC, fabrication, and services."},
+      {"strong": "Modular and Phased Execution", "rest": "Reduces risk and accelerates early gas monetization."},
+      {"strong": "Strong Governance & Interface Management", "rest": "Robust PMC oversight across multiple EPC packages."},
+      {"strong": "Proactive HSSE Planning", "rest": "Early hazard identification and environmental protection measures."},
+      {"strong": "Strategic Stakeholder Engagement", "rest": "Embedded community relations and regulator alignment."},
+      {"strong": "Security-Embedded Design", "rest": "Incorporates Niger Delta security realities into execution planning."},
+      {"strong": "Decarbonization Focus", "rest": "Captures flare gas, reducing CO₂ emissions by 4 million tons/year."}
+    ],
+    "testimonials": [
+      { "name": "John S.", "text": "Great strtegy for early start." }
+    ],
+    "cover": "/images/products/project-execution-strategy.webp"
+  },
   {
     "slug": "sops-for-admin-ops",
     "title": "SOPs for Admin Ops (Word)",
