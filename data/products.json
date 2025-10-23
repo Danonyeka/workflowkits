@@ -85,7 +85,7 @@
       { "name": "Ifeanyi D.", "text": "Solid baseline for formalizing our ops." }
     ],
     "cover": "/images/products/admin-sops.png"
-  }
+  },
    {
     "slug": "project-risk-register",
     "title": "Project Risk Register (Excel)",
@@ -97,7 +97,7 @@
       "Roles & responsibilities matrix"
     ],
     "testimonials": [
-      { "name": "Ken O..", "text": "Great template for effective risk management" }
+      { "name": "Ken O.", "text": "Great template for effective risk management" }
     ],
     "cover": "/images/products/project-risk-register.webp"
   }
