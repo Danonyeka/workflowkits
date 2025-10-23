@@ -86,4 +86,19 @@
     ],
     "cover": "/images/products/admin-sops.png"
   }
+   {
+    "slug": "project-risk-register",
+    "title": "Project Risk Register (Excel)",
+    "category": "Template",
+    "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
+    "features": [
+      "Editable Word format",
+      "Process diagrams",
+      "Roles & responsibilities matrix"
+    ],
+    "testimonials": [
+      { "name": "Ken O..", "text": "Great template for effective risk management" }
+    ],
+    "cover": "/images/products/project-risk-register.webp"
+  }
 ]
