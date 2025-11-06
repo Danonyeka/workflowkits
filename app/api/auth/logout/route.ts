@@ -1,32 +1,32 @@
 // app/api/auth/logout/route.ts
-import { NextResponse } from "next/server";
-
-const AUTH_COOKIE = "wk_session"; // use your cookie name
+import { NextRequest, NextResponse } from "next/server";
+import { clearSessionCookie } from "@/lib/auth";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-// Called via fetch() from the client so it won't navigate
-export async function POST() {
-  const res = NextResponse.json({ ok: true });
-  res.cookies.set(AUTH_COOKIE, "", {
-    httpOnly: true,
-    path: "/",
-    maxAge: 0,
-    expires: new Date(0),
-    sameSite: "lax",
+function noStoreJson(body: any, status = 200) {
+  return new NextResponse(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store, no-cache, must-revalidate",
+      Pragma: "no-cache",
+    },
   });
-  return res;
 }
 
-// If someone hits the URL directly in the browser, still clear then redirect
-export async function GET() {
-  const res = NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"));
-  res.cookies.set(AUTH_COOKIE, "", {
-    httpOnly: true,
-    path: "/",
-    maxAge: 0,
-    expires: new Date(0),
-    sameSite: "lax",
-  });
+export async function POST() {
+  clearSessionCookie();                 // clears host-only + .domain + no-dot
+  return noStoreJson({ ok: true });
+}
+
+export async function GET(req: NextRequest) {
+  clearSessionCookie();
+  const origin = req.nextUrl.origin;    // always valid for this request
+  const res = NextResponse.redirect(new URL("/", origin), { status: 302 });
+  res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  res.headers.set("Pragma", "no-cache");
   return res;
 }
