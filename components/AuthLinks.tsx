@@ -1,3 +1,5 @@
+
+// components/AuthLinks.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -12,8 +14,8 @@ export default function AuthLinks() {
     try {
       const r = await fetch("/api/auth/session", {
         method: "GET",
-        credentials: "include",      // ← send wk_session cookie
-        cache: "no-store",           // ← avoid stale CDN/browser
+        credentials: "include",   // read wk_session
+        cache: "no-store",        // never serve cached JSON
         headers: { Accept: "application/json" },
       });
       const d = await r.json();
@@ -23,34 +25,31 @@ export default function AuthLinks() {
     }
   }
 
-  // initial + route changes
-  useEffect(() => { checkSession(); }, [pathname]);
-
-  // react immediately to login/logout without full reload
+  // initial
   useEffect(() => {
-    const onChanged = () => checkSession();
-    window.addEventListener("auth:changed", onChanged);
-
-    // also re-check when tab becomes visible (returning from /login)
-    const onVis = () => { if (document.visibilityState === "visible") checkSession(); };
-    document.addEventListener("visibilitychange", onVis);
-
-    return () => {
-      window.removeEventListener("auth:changed", onChanged);
-      document.removeEventListener("visibilitychange", onVis);
-    };
+    checkSession();
   }, []);
+
+  // re-check on route changes
+  useEffect(() => {
+    checkSession();
+  }, [pathname]);
+
+  // re-check immediately when login/register/logout fires the event
+  useEffect(() => {
+    const onAuthChanged = () => {
+      checkSession();
+      router.refresh(); // ensure server comps re-read cookies
+    };
+    window.addEventListener("auth:changed", onAuthChanged);
+    return () => window.removeEventListener("auth:changed", onAuthChanged);
+  }, [router]);
 
   const onLogout = async () => {
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-        cache: "no-store",
-        headers: { "Content-Type": "application/json" },
-      });
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     } finally {
-      // tell listeners, refresh server comps, and reflect immediately
+      // broadcast + refresh UI
       window.dispatchEvent(new Event("auth:changed"));
       setAuthed(false);
       router.refresh();
