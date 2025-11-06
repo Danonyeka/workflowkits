@@ -71,6 +71,21 @@
     ],
     "cover": "/images/products/project-execution-strategy.webp"
   },
+   {
+    "slug": "Risk-register",
+    "title": "Project Risk Register (Excel)",
+    "category": "Tool",
+    "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
+    "features": [
+      "Editable Word format",
+      "Process diagrams",
+      "Roles & responsibilities matrix"
+    ],
+    "testimonials": [
+      { "name": "Ken O.", "text": "Great template for effective risk management" }
+    ],
+    "cover": "/images/products/risk-register.webp"
+  },
   {
     "slug": "sops-for-admin-ops",
     "title": "SOPs for Admin Ops (Word)",
@@ -85,20 +100,5 @@
       { "name": "Ifeanyi D.", "text": "Solid baseline for formalizing our ops." }
     ],
     "cover": "/images/products/admin-sops.png"
-  },
-   {
-    "slug": "project-risk-register",
-    "title": "Project Risk Register (Excel)",
-    "category": "Template",
-    "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
-    "features": [
-      "Editable Word format",
-      "Process diagrams",
-      "Roles & responsibilities matrix"
-    ],
-    "testimonials": [
-      { "name": "Ken O.", "text": "Great template for effective risk management" }
-    ],
-    "cover": "/images/products/project-risk-register.webp"
   }
 ]
