@@ -1,4 +1,4 @@
-// app/login/LoginClient.tsx
+// app/login/LoginClient.tsx 
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,17 +15,28 @@ export default function LoginClient() {
   const next = sp?.get("next") ?? "/";
 
   const submit = async () => {
+    if (loading) return;
     setErr(null);
     setLoading(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
+        credentials: "include",        // send/receive wk_session
+        cache: "no-store",             // avoid any stale caches
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (data?.ok) router.push(next);
-      else setErr(data?.error || "Error");
+
+      if (data?.ok) {
+        // notify header/AuthLinks to re-check the session immediately
+        window.dispatchEvent(new Event("auth:changed"));
+        // navigate and ensure server components read fresh cookies
+        router.replace(next);
+        router.refresh();
+        return;
+      }
+      setErr(data?.error || "Invalid credentials");
     } catch (e: any) {
       setErr(e?.message || "Network error");
     } finally {
