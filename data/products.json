@@ -75,11 +75,20 @@
     "slug": "Risk-register",
     "title": "Project Risk Register (Excel)",
     "category": "Tool",
-    "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
+    "short": "Empower your projects with this dynamic Excel-based **Risk Management Tool** — a smart, automated register that tracks, scores, and visualizes risks in real time for faster, data-driven decisions.",
     "features": [
-      "Editable Word format",
-      "Process diagrams",
-      "Roles & responsibilities matrix"
+      {"strong": "Automated Risk Scoring", "rest": "Instantly calculates Inherent, Residual, and RPN (Risk Priority Number) using built-in formulas."},
+      {"strong": "Dynamic Filtering & Ranking", "rest": "Automatically highlights top risks based on RPN or Residual score thresholds."},
+      {"strong": "Smart Dashboards", "rest": "Summarizes open, high, medium, and low risks with auto-updating charts and color-coded visuals."},
+      {"strong": "Interactive Risk Matrix", "rest": "Displays real-time 5×5 probability-impact matrix with conditional color formatting."},
+      {"strong": "Upcoming & Overdue Alerts", "rest": "Flags risks due for review within 0–7 days and overdue items automatically."},
+      {"strong": "Automatic Status Tracking", "rest": "Differentiates between Open and Closed risks with dynamic color cues and filtering."},
+      {"strong": "Dropdown Selections", "rest": "Simplifies data entry with predefined categories, risk owners, and probability/impact ratings."},
+      {"strong": "Landing Page Summary", "rest": "Includes a customizable project info page with instructions for tool use and setup."},
+      {"strong": "No Macros Required", "rest": "Fully functional with native Excel formulas and dynamic arrays — works on any system."},
+      {"strong": "Instant Reporting", "rest": "Generates summary tables for Top Risks, Upcoming Reviews, and Risk Trends with a single click."},
+      {"strong": "Customizable Thresholds", "rest": "Easily adjust RPN or Residual score thresholds to match your organization’s standards."},
+      {"strong": "Clean & Professional Design", "rest": "Structured sheets, modern formatting, and intuitive layout for corporate reporting."}
     ],
     "testimonials": [
       { "name": "Ken O.", "text": "Great template for effective risk management" }
