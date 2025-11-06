@@ -1,4 +1,4 @@
-// app/login/LoginClient.tsx 
+// app/login/LoginClient.tsx
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,17 +21,16 @@ export default function LoginClient() {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        credentials: "include",        // send/receive wk_session
-        cache: "no-store",             // avoid any stale caches
+        credentials: "include",   // make sure wk_session cookie is set
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
 
       if (data?.ok) {
-        // notify header/AuthLinks to re-check the session immediately
+        // notify header instantly + re-render with fresh cookies
         window.dispatchEvent(new Event("auth:changed"));
-        // navigate and ensure server components read fresh cookies
         router.replace(next);
         router.refresh();
         return;
