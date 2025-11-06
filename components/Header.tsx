@@ -3,12 +3,44 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-const CartBadge = dynamic(() => import("./CartBadge"), { ssr: false });
-const AuthLinks = dynamic(() => import("./AuthLinks"), { ssr: false });
+/** ---- tiny client hook for live session (no cache) ---- */
+type Session = { ok: boolean; user: { id: string; email: string } | null };
+
+function useSession() {
+  const [session, setSession] = useState<Session>({ ok: false, user: null });
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await fetch("/api/auth/session", {
+      credentials: "include",
+      cache: "no-store",
+      headers: { Accept: "application/json", Pragma: "no-cache" },
+    });
+    const json = (await res.json()) as Session;
+    setSession(json);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    load();
+    // re-check on tab focus / visibility
+    const onFocus = () => load();
+    const onVisible = () =>
+      document.visibilityState === "visible" && load();
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [load]);
+
+  return { ...session, loading, refresh: load };
+}
 
 /** Scrolling announcement bar (marquee-like) using CSS keyframes */
 function AnnouncementBar() {
@@ -17,44 +49,21 @@ function AnnouncementBar() {
       <div className="relative h-8">
         <div className="absolute inset-y-0 left-0 flex items-center">
           <div className="marquee-track whitespace-nowrap text-xs leading-8 will-change-transform">
-            <span className="mx-6">
-              <strong>Secure Paystack checkout (NGN)</strong>
-            </span>
-            <span className="mx-6">
-              <strong>New:</strong> SOPs Pack
-            </span>
-            <span className="mx-6">
-              <strong>Weekly Deal:</strong> -15% on Journals (Fri–Sun)
-            </span>
-            <span className="mx-6">
-              <strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more
-            </span>
+            <span className="mx-6"><strong>All templates & journals are FREE — no checkout needed</strong></span>
+            <span className="mx-6"><strong>New:</strong> SOPs Pack</span>
+            <span className="mx-6"><strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more</span>
             {/* duplicate for seamless loop */}
-            <span className="mx-6">
-              <strong>Secure Paystack checkout (NGN)</strong>
-            </span>
-            <span className="mx-6">
-              <strong>New:</strong> SOPs Pack
-            </span>
-            <span className="mx-6">
-              <strong>Weekly Deal:</strong> -15% on Journals (Fri–Sun)
-            </span>
-            <span className="mx-6">
-              <strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more
-            </span>
+            <span className="mx-6"><strong>All templates & journals are FREE — no checkout needed</strong></span>
+            <span className="mx-6"><strong>New:</strong> SOPs Pack</span>
+            <span className="mx-6"><strong>Tools:</strong> Risk Register, Stakeholder Matrix &amp; more</span>
           </div>
         </div>
       </div>
 
-      {/* Local CSS for the marquee animation */}
       <style jsx>{`
         @keyframes wfk-marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
         .marquee-track {
           display: inline-block;
@@ -69,6 +78,8 @@ function AnnouncementBar() {
 export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { ok, user, loading, refresh } = useSession();
 
   // Close mobile menu on route change and on ESC
   useEffect(() => setOpen(false), [pathname]);
@@ -77,6 +88,12 @@ export function Header() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    await refresh();       // re-check session (should be logged out)
+    router.refresh?.();    // revalidate route cache
+  };
 
   return (
     <>
@@ -107,11 +124,20 @@ export function Header() {
             <Link className="hover:text-brand" href="/categories/Journals">Journals</Link>
             <Link className="hover:text-brand" href="/categories/E-Books">E-Books</Link>
             <Link className="hover:text-brand" href="/categories/Tools">Tools</Link>
-            <Link className="hover:text-brand flex items-center gap-1" href="/cart">
-              Cart <CartBadge />
-            </Link>
-            <div className="ml-3 pl-3 border-l border-gray-300">
-              <AuthLinks />
+
+            {/* Auth area */}
+            <div className="ml-3 pl-3 border-l border-gray-300 flex items-center gap-2">
+              {loading ? null : ok && user ? (
+                <>
+                  <span className="text-gray-600">{user.email}</span>
+                  <button onClick={logout} className="brand-btn">Logout</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="ghost-btn">Sign in</Link>
+                  <Link href="/register" className="brand-btn">Create account</Link>
+                </>
+              )}
             </div>
           </nav>
 
@@ -124,13 +150,7 @@ export function Header() {
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
           >
-            <svg
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               {open ? (
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -154,11 +174,19 @@ export function Header() {
             <Link className="block rounded-lg px-3 py-2 hover:bg-gray-50" href="/categories/Journals">Journals</Link>
             <Link className="block rounded-lg px-3 py-2 hover:bg-gray-50" href="/categories/E-Books">E-Books</Link>
             <Link className="block rounded-lg px-3 py-2 hover:bg-gray-50" href="/categories/Tools">Tools</Link>
-            <Link className="block rounded-lg px-3 py-2 hover:bg-gray-50" href="/cart">
-              Cart <span className="ml-1 align-middle"><CartBadge /></span>
-            </Link>
-            <div className="mt-2 border-t border-gray-200 pt-2">
-              <AuthLinks />
+
+            <div className="mt-2 border-t border-gray-200 pt-2 flex items-center gap-2">
+              {loading ? null : ok && user ? (
+                <>
+                  <span className="text-gray-600">{user.email}</span>
+                  <button onClick={logout} className="brand-btn w-full">Logout</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="ghost-btn w-full text-center">Sign in</Link>
+                  <Link href="/register" className="brand-btn w-full text-center">Create account</Link>
+                </>
+              )}
             </div>
           </div>
         </div>
