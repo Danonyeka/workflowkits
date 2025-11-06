@@ -1,4 +1,4 @@
-// app/register/RegisterClient.tsx 
+// app/register/RegisterClient.tsx
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,7 +21,7 @@ export default function RegisterClient() {
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        credentials: "include",     // set/read wk_session cookie
+        credentials: "include",
         cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -29,10 +29,14 @@ export default function RegisterClient() {
       const data = await res.json();
 
       if (data?.ok) {
-        // tell header/AuthLinks to re-check session immediately
-        window.dispatchEvent(new Event("auth:changed"));
+        sessionStorage.setItem("wk_auth_pending", "1");
+        try {
+          new BroadcastChannel("wk_auth").postMessage("changed");
+        } catch {}
+        localStorage.setItem("wk_auth_ping", String(Date.now()));
+
         router.replace(next);
-        router.refresh();           // refresh server comps to read new cookie
+        router.refresh();
         return;
       }
       setErr(data?.error || "Registration failed");
