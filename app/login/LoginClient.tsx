@@ -1,4 +1,4 @@
-// app/login/LoginClient.tsx 
+// app/login/LoginClient.tsx
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,7 +21,7 @@ export default function LoginClient() {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        credentials: "include",   // ensure wk_session cookie is set/kept
+        credentials: "include",
         cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -29,8 +29,13 @@ export default function LoginClient() {
       const data = await res.json();
 
       if (data?.ok) {
-        // notify header immediately and refresh server comps
-        window.dispatchEvent(new Event("auth:changed"));
+        // signal header immediately (both channels) + enable micro-poll
+        sessionStorage.setItem("wk_auth_pending", "1");
+        try {
+          new BroadcastChannel("wk_auth").postMessage("changed");
+        } catch {}
+        localStorage.setItem("wk_auth_ping", String(Date.now()));
+
         router.replace(next);
         router.refresh();
         return;
