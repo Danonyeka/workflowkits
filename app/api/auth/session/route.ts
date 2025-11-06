@@ -2,15 +2,20 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 
-// Ensure this route is never statically cached
+// Never allow static or ISR caching
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
-  // If your getSession is synchronous, remove `await`
-  const s = await getSession(); 
+export function GET() {
+  const s = getSession(); // sync
   return NextResponse.json(
-    { ok: !!s, user: s ?? null },
-    { headers: { "Cache-Control": "no-store" } }
+    { ok: !!s, user: s ?? null, ts: Date.now() },
+    {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    }
   );
 }
