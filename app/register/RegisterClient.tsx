@@ -1,4 +1,4 @@
-// app/register/RegisterClient.tsx
+// app/register/RegisterClient.tsx 
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,17 +15,27 @@ export default function RegisterClient() {
   const next = sp?.get("next") ?? "/";
 
   const submit = async () => {
+    if (loading) return;
     setErr(null);
     setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
+        credentials: "include",     // set/read wk_session cookie
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (data?.ok) router.push(next);
-      else setErr(data?.error || "Error");
+
+      if (data?.ok) {
+        // tell header/AuthLinks to re-check session immediately
+        window.dispatchEvent(new Event("auth:changed"));
+        router.replace(next);
+        router.refresh();           // refresh server comps to read new cookie
+        return;
+      }
+      setErr(data?.error || "Registration failed");
     } catch (e: any) {
       setErr(e?.message || "Network error");
     } finally {
