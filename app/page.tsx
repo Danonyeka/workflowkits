@@ -9,7 +9,8 @@ export default function Home() {
   const rest = products.slice(4);
 
   return (
-    <div className="space-y-10 max-w-screen-2xl mx-auto px-4">
+    // Wider wrapper so more columns can fit; centered with small side padding
+    <div className="space-y-10 max-w-[1800px] mx-auto px-3">
       <section className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-bold">
           Save Time. Reduce Errors. Improve Outcomes.
@@ -25,15 +26,15 @@ export default function Home() {
 
       <CategoryNav />
 
-      {/* Featured — auto-fit so no empty columns */}
-      <section className="grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+      {/* Featured — auto-fit so no empty columns; smaller min width to allow more columns */}
+      <section className="grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
         {featured.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
       </section>
 
-      {/* Rest — auto-fit, multiple rows automatically */}
-      <section className="mt-10 grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+      {/* Rest — auto-fit, multiple rows automatically; same min width */}
+      <section className="mt-10 grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
         {rest.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
