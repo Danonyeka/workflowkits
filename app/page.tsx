@@ -9,7 +9,7 @@ export default function Home() {
   const rest = products.slice(4);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 max-w-screen-2xl mx-auto px-4">
       <section className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-bold">
           Save Time. Reduce Errors. Improve Outcomes.
@@ -25,21 +25,21 @@ export default function Home() {
 
       <CategoryNav />
 
-      {/* Featured — fixed counts, centered & capped */}
-      <section className="mx-auto max-w-screen-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-5 items-stretch">
+      {/* Featured — auto-fit so no empty columns */}
+      <section className="grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
         {featured.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
       </section>
 
-      {/* Rest — auto-fit columns, centered & capped */}
-      <section className="mx-auto max-w-screen-2xl mt-10 grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))]">
+      {/* Rest — auto-fit, multiple rows automatically */}
+      <section className="mt-10 grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
         {rest.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
       </section>
 
-      <section className="rounded-2xl bg-gray-50 p-6 mx-auto max-w-screen-2xl">
+      <section className="rounded-2xl bg-gray-50 p-6">
         <h2 className="text-2xl font-semibold mb-2">What Readers say</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {featured
@@ -54,7 +54,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="surface p-8 sm:p-10 text-center space-y-4 mx-auto max-w-screen-2xl">
+      <section className="surface p-8 sm:p-10 text-center space-y-4">
         <h1 className="h1">Build faster with proven templates</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Project management templates (Excel, Word, Google Sheets), construction checklists,
