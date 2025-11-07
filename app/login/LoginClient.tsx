@@ -26,7 +26,7 @@ export default function LoginClient() {
         const d = await r.json();
         if (d?.ok) return true;
       } catch {}
-      await new Promise((res) => setTimeout(res, 150));
+      await new Promise((res) => setTimeout(res, 120));
     }
     return false;
   };
@@ -46,10 +46,12 @@ export default function LoginClient() {
       const data = await res.json();
 
       if (data?.ok) {
-        const ok = await waitUntilSessionVisible();
-        // Signal header either way; ok should be true in practice
+        await waitUntilSessionVisible();
+
+        // fire ALL signals so the header flips immediately
         try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
         localStorage.setItem("wk_auth_ping", String(Date.now()));
+        window.dispatchEvent(new Event("wk-auth-changed"));
 
         router.replace(next);
         router.refresh();
