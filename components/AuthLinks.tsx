@@ -12,11 +12,15 @@ export default function AuthLinks() {
 
   async function checkSession() {
     try {
-      const r = await fetch("/api/auth/session", {
+      const r = await fetch(`/api/auth/session?ts=${Date.now()}`, {
         method: "GET",
         credentials: "include",
         cache: "no-store",
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+          Pragma: "no-cache",
+          "Cache-Control": "no-cache",
+        },
       });
       const d = await r.json();
       setAuthed(!!d?.ok);
@@ -25,15 +29,24 @@ export default function AuthLinks() {
     }
   }
 
-  // Initial + on route change
   useEffect(() => {
     checkSession();
   }, []);
+
   useEffect(() => {
     checkSession();
   }, [pathname]);
 
-  // Listen for broadcast messages from login/register/logout
+  // Re-check when tab becomes visible (handles some racey cases after nav)
+  useEffect(() => {
+    const onVis = () => {
+      if (document.visibilityState === "visible") checkSession();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  // BroadcastChannel + storage ping (in case other pages/tabs log in/out)
   useEffect(() => {
     let bc: BroadcastChannel | null = null;
     try {
@@ -42,11 +55,8 @@ export default function AuthLinks() {
         checkSession();
         router.refresh();
       };
-    } catch {
-      // older browsers: ignore
-    }
+    } catch {}
 
-    // Also listen to localStorage ping
     const onStorage = (e: StorageEvent) => {
       if (e.key === "wk_auth_ping") {
         checkSession();
@@ -57,43 +67,15 @@ export default function AuthLinks() {
 
     return () => {
       window.removeEventListener("storage", onStorage);
-      try {
-        bc?.close();
-      } catch {}
+      try { bc?.close(); } catch {}
     };
   }, [router]);
-
-  // Short micro-poll right after we detect a “pending” flag (set by login/register)
-  useEffect(() => {
-    const shouldPoll = sessionStorage.getItem("wk_auth_pending") === "1";
-    if (!shouldPoll) return;
-
-    let ticks = 0;
-    pollRef.current = window.setInterval(() => {
-      ticks += 1;
-      checkSession();
-      if (ticks >= 6) {
-        // stop after ~3s
-        sessionStorage.removeItem("wk_auth_pending");
-        if (pollRef.current) clearInterval(pollRef.current);
-        pollRef.current = null;
-      }
-    }, 500);
-
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-      pollRef.current = null;
-    };
-  }, []);
 
   const onLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     } finally {
-      // signal everywhere
-      try {
-        new BroadcastChannel("wk_auth").postMessage("changed");
-      } catch {}
+      try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
       localStorage.setItem("wk_auth_ping", String(Date.now()));
       setAuthed(false);
       router.refresh();
