@@ -26,7 +26,7 @@ export default function Home() {
       <CategoryNav />
 
       {/* Featured — fixed counts, centered & capped */}
-      <section className="mx-auto max-w-screen-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
+      <section className="mx-auto max-w-screen-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-5 items-stretch">
         {featured.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
