@@ -25,21 +25,21 @@ export default function Home() {
 
       <CategoryNav />
 
-      {/* Featured row */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-5">
+      {/* Featured — fixed counts, centered & capped */}
+      <section className="mx-auto max-w-screen-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
         {featured.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
       </section>
 
-      {/* Auto-fit grid for the rest (creates multiple rows automatically) */}
-      <section className="mt-10 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+      {/* Rest — auto-fit columns, centered & capped */}
+      <section className="mx-auto max-w-screen-2xl mt-10 grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))]">
         {rest.map((p) => (
           <ProductCard key={p.slug} product={p as any} />
         ))}
       </section>
 
-      <section className="rounded-2xl bg-gray-50 p-6">
+      <section className="rounded-2xl bg-gray-50 p-6 mx-auto max-w-screen-2xl">
         <h2 className="text-2xl font-semibold mb-2">What Readers say</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {featured
@@ -54,7 +54,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="surface p-8 sm:p-10 text-center space-y-4">
+      <section className="surface p-8 sm:p-10 text-center space-y-4 mx-auto max-w-screen-2xl">
         <h1 className="h1">Build faster with proven templates</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Project management templates (Excel, Word, Google Sheets), construction checklists,
