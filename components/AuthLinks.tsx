@@ -1,14 +1,13 @@
 // components/AuthLinks.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function AuthLinks() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const router = useRouter();
   const pathname = usePathname() ?? "/";
-  const pollRef = useRef<number | null>(null);
 
   async function checkSession() {
     try {
@@ -29,43 +28,38 @@ export default function AuthLinks() {
     }
   }
 
-  useEffect(() => {
-    checkSession();
-  }, []);
+  // initial + on route change
+  useEffect(() => { checkSession(); }, []);
+  useEffect(() => { checkSession(); }, [pathname]);
 
+  // tab visibility (helps after redirects)
   useEffect(() => {
-    checkSession();
-  }, [pathname]);
-
-  // Re-check when tab becomes visible (handles some racey cases after nav)
-  useEffect(() => {
-    const onVis = () => {
-      if (document.visibilityState === "visible") checkSession();
-    };
+    const onVis = () => document.visibilityState === "visible" && checkSession();
     document.addEventListener("visibilitychange", onVis);
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  // BroadcastChannel + storage ping (in case other pages/tabs log in/out)
+  // cross-tab / same-tab signals
   useEffect(() => {
+    // Custom DOM event
+    const onDom = () => { checkSession(); router.refresh(); };
+    window.addEventListener("wk-auth-changed", onDom as EventListener);
+
+    // BroadcastChannel
     let bc: BroadcastChannel | null = null;
     try {
       bc = new BroadcastChannel("wk_auth");
-      bc.onmessage = () => {
-        checkSession();
-        router.refresh();
-      };
+      bc.onmessage = () => { checkSession(); router.refresh(); };
     } catch {}
 
+    // localStorage ping
     const onStorage = (e: StorageEvent) => {
-      if (e.key === "wk_auth_ping") {
-        checkSession();
-        router.refresh();
-      }
+      if (e.key === "wk_auth_ping") { checkSession(); router.refresh(); }
     };
     window.addEventListener("storage", onStorage);
 
     return () => {
+      window.removeEventListener("wk-auth-changed", onDom as EventListener);
       window.removeEventListener("storage", onStorage);
       try { bc?.close(); } catch {}
     };
@@ -75,8 +69,10 @@ export default function AuthLinks() {
     try {
       await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     } finally {
+      // fire signals
       try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
       localStorage.setItem("wk_auth_ping", String(Date.now()));
+      window.dispatchEvent(new Event("wk-auth-changed"));
       setAuthed(false);
       router.refresh();
     }
