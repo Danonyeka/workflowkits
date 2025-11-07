@@ -16,7 +16,7 @@ export default function LoginClient() {
 
   const waitUntilSessionVisible = async () => {
     const started = Date.now();
-    while (Date.now() - started < 3000) {
+    while (Date.now() - started < 2500) {
       try {
         const r = await fetch(`/api/auth/session?ts=${Date.now()}`, {
           credentials: "include",
@@ -48,13 +48,13 @@ export default function LoginClient() {
       if (data?.ok) {
         await waitUntilSessionVisible();
 
-        // fire ALL signals so the header flips immediately
+        // fire signals for header in current tab and other tabs
         try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
         localStorage.setItem("wk_auth_ping", String(Date.now()));
         window.dispatchEvent(new Event("wk-auth-changed"));
 
-        router.replace(next);
-        router.refresh();
+        // Do a HARD navigation so the header renders authenticated immediately
+        window.location.assign(next);
         return;
       }
       setErr(data?.error || "Invalid credentials");
