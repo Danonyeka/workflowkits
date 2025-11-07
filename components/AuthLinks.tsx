@@ -2,12 +2,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function AuthLinks() {
   const [authed, setAuthed] = useState<boolean | null>(null);
-  const router = useRouter();
   const pathname = usePathname() ?? "/";
+
+  function optimisticCookieCheck() {
+    try {
+      // Instant flip if the cookie is present
+      if (typeof document !== "undefined" && document.cookie.includes("wk_session=")) {
+        setAuthed(true);
+        return true;
+      }
+    } catch {}
+    return false;
+  }
 
   async function checkSession() {
     try {
@@ -28,33 +38,49 @@ export default function AuthLinks() {
     }
   }
 
-  // initial + on route change
-  useEffect(() => { checkSession(); }, []);
-  useEffect(() => { checkSession(); }, [pathname]);
+  // On mount: flip instantly if cookie is already there, then confirm with API
+  useEffect(() => {
+    const flipped = optimisticCookieCheck();
+    checkSession(); // confirm
+    if (!flipped && authed === null) setAuthed(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // tab visibility (helps after redirects)
+  // Re-check on route changes (helps after navigation)
+  useEffect(() => {
+    checkSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  // Tab visibility (helps after redirects)
   useEffect(() => {
     const onVis = () => document.visibilityState === "visible" && checkSession();
     document.addEventListener("visibilitychange", onVis);
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  // cross-tab / same-tab signals
+  // Cross-tab and same-tab auth change signals
   useEffect(() => {
-    // Custom DOM event
-    const onDom = () => { checkSession(); router.refresh(); };
+    const onDom = () => {
+      optimisticCookieCheck();
+      checkSession();
+    };
     window.addEventListener("wk-auth-changed", onDom as EventListener);
 
-    // BroadcastChannel
     let bc: BroadcastChannel | null = null;
     try {
       bc = new BroadcastChannel("wk_auth");
-      bc.onmessage = () => { checkSession(); router.refresh(); };
+      bc.onmessage = () => {
+        optimisticCookieCheck();
+        checkSession();
+      };
     } catch {}
 
-    // localStorage ping
     const onStorage = (e: StorageEvent) => {
-      if (e.key === "wk_auth_ping") { checkSession(); router.refresh(); }
+      if (e.key === "wk_auth_ping") {
+        optimisticCookieCheck();
+        checkSession();
+      }
     };
     window.addEventListener("storage", onStorage);
 
@@ -63,18 +89,19 @@ export default function AuthLinks() {
       window.removeEventListener("storage", onStorage);
       try { bc?.close(); } catch {}
     };
-  }, [router]);
+  }, []);
 
   const onLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include", cache: "no-store" });
     } finally {
       // fire signals
       try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
       localStorage.setItem("wk_auth_ping", String(Date.now()));
       window.dispatchEvent(new Event("wk-auth-changed"));
       setAuthed(false);
-      router.refresh();
+      // hard refresh ensures everything re-renders unauthenticated
+      window.location.assign("/");
     }
   };
 
