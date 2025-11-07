@@ -16,7 +16,7 @@ export default function RegisterClient() {
 
   const waitUntilSessionVisible = async () => {
     const started = Date.now();
-    while (Date.now() - started < 3000) {
+    while (Date.now() - started < 2500) {
       try {
         const r = await fetch(`/api/auth/session?ts=${Date.now()}`, {
           credentials: "include",
@@ -48,13 +48,11 @@ export default function RegisterClient() {
       if (data?.ok) {
         await waitUntilSessionVisible();
 
-        // fire ALL signals so the header flips immediately
         try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
         localStorage.setItem("wk_auth_ping", String(Date.now()));
         window.dispatchEvent(new Event("wk-auth-changed"));
 
-        router.replace(next);
-        router.refresh();
+        window.location.assign(next);
         return;
       }
       setErr(data?.error || "Registration failed");
