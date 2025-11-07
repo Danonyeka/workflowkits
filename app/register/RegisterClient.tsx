@@ -14,6 +14,23 @@ export default function RegisterClient() {
   const sp = useSearchParams();
   const next = sp?.get("next") ?? "/";
 
+  const waitUntilSessionVisible = async () => {
+    const started = Date.now();
+    while (Date.now() - started < 3000) {
+      try {
+        const r = await fetch(`/api/auth/session?ts=${Date.now()}`, {
+          credentials: "include",
+          cache: "no-store",
+          headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+        });
+        const d = await r.json();
+        if (d?.ok) return true;
+      } catch {}
+      await new Promise((res) => setTimeout(res, 150));
+    }
+    return false;
+  };
+
   const submit = async () => {
     if (loading) return;
     setErr(null);
@@ -29,10 +46,8 @@ export default function RegisterClient() {
       const data = await res.json();
 
       if (data?.ok) {
-        sessionStorage.setItem("wk_auth_pending", "1");
-        try {
-          new BroadcastChannel("wk_auth").postMessage("changed");
-        } catch {}
+        const ok = await waitUntilSessionVisible();
+        try { new BroadcastChannel("wk_auth").postMessage("changed"); } catch {}
         localStorage.setItem("wk_auth_ping", String(Date.now()));
 
         router.replace(next);
