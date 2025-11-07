@@ -54,7 +54,7 @@
    {
     "slug": "project-execution-strategy",
     "title": "PROJECT EXECUTION STRATEGY — ASSESS (EARLY) STAGE for Niger Delta Gas Infrastructure Expansion (NDGIE) Project (PDF)",
-    "category": "Template",
+    "category": "Templates",
     "short": "The NDGIE Project Execution Strategy outlines the structured approach to deliver gas infrastructure efficiently, safely, and in alignment with regulatory and stakeholder expectations.",
     "features": [
       {"strong": "Integrated Delivery Approach", "rest": "Seamlessly connects gas gathering, processing, power generation, and export."},
@@ -74,7 +74,7 @@
    {
     "slug": "risk-register",
     "title": "Project Risk Register (Excel)",
-    "category": "Tool",
+    "category": "Tools",
     "short": "Empower your projects with this dynamic Excel-based **Risk Management Tool** — a smart, automated register that tracks, scores, and visualizes risks in real time for faster, data-driven decisions.",
     "features": [
       {"strong": "Automated Risk Scoring", "rest": "Instantly calculates Inherent, Residual, and RPN (Risk Priority Number) using built-in formulas."},
