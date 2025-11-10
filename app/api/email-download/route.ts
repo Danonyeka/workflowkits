@@ -16,7 +16,7 @@ const FILES: Record<string, string> = {
   "lessons-learned-journal": "lessons-learned-journal.pdf",
   "risk-register": "risk-register.xlsx",
   "project-execution-strategy": "project-execution-strategy.docx",
-  "Monthly-Project-Report-Sample": "monthly-project-report-sample.docx",
+  "monthly-project-report-sample": "monthly-project-report-sample.docx",
 };
 
 function titleFromSlug(slug: string) {
