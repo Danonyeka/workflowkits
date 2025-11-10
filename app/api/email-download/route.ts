@@ -16,6 +16,7 @@ const FILES: Record<string, string> = {
   "lessons-learned-journal": "lessons-learned-journal.pdf",
   "risk-register": "risk-register.xlsx",
   "project-execution-strategy": "project-execution-strategy.docx",
+  "Monthly-Project-Report-Sample": "monthly-project-report-sample.docx",
 };
 
 function titleFromSlug(slug: string) {
@@ -25,6 +26,7 @@ function titleFromSlug(slug: string) {
     "lessons-learned-journal": "Lessons Learned Journal (PDF)",
     "risk-register": "Project Risk Register (Excel)",
     "project-execution-strategy": "Project Execution Strategy (MS Word)",
+    "monthly-project-report-sample": "Monthly Project Report Sample (MS Word)",
   };
   return map[slug] || slug.replace(/-/g, " ");
 }
