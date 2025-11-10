@@ -96,19 +96,24 @@
     "cover": "/images/products/risk-register.webp"
   },
   {
-    "slug": "sops-for-admin-ops",
-    "title": "SOPs for Admin Ops (Word)",
-    "category": "E-Books",
-    "short": "Standardize routine processes: filing, inbound mail, vendor onboarding.",
+    "slug": "monthly-project-report-sample",
+    "title": "Monthly Project Report Sample (Word)",
+    "category": "Templates",
+    "short": "A professional monthly project report template for showcasing progress, performance, and key insights with charts and executive summaries.",
     "features": [
-      "Editable Word format",
-      "Process diagrams",
-      "Roles & responsibilities matrix"
+      {"strong": "Executive-ready format** with corporate blue & gray styling."},
+      {"strong": "Editable Word document** structured across all EPC project phases."},
+      {"strong": "Pre-built sections** for Executive Summary, Progress, Cost, Schedule, QHSE, Risks, and Milestones."},
+      {"strong": "Dynamic tables and placeholders** for charts, KPIs, and visuals."},
+      {"strong": "Professional narrative samples** for quick customization."},
+      {"strong": "Clear formatting for stakeholder reporting** and board presentations."},
+      {"strong": "Guided placeholders** for photos, graphs, and progress curves."},
+      {"strong": "Compatible with all project types** — engineering, construction, or infrastructure."}
     ],
     "testimonials": [
-      { "name": "Ifeanyi D.", "text": "Solid baseline for formalizing our ops." }
+      { "name": "John S.", "text": "The report template is quite detailed and useful for my project" }
     ],
-    "cover": "/images/products/admin-sops.png"
+    "cover": "/images/products/monthly-project-report-sample.webp"
   },
   {
     "slug": "project-status-report-tepmplate",
