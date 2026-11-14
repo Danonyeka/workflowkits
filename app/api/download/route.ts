@@ -12,7 +12,9 @@ const FILES: Record<string, string> = {
   "project-charter-template": "project-charter-template.docx",
   "project-execution-plan": "project-execution-plan.docx",
   "lessons-learned-journal": "lessons-learned-journal.pdf",
-  // add others...
+  "monthly-project-report-sample": "monthly-project-report-sample.docx",
+  "project-execution-strategy": "project-execution-strategy.docx",
+  "risk-register": "risk-register.xlsx",
 };
 
 function contentTypeByExt(filename: string) {
@@ -115,7 +117,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (e: any) {
     return NextResponse.json(
-      { error: "File not found", detail: e?.message },
+      { error: "File not found" },
       { status: 404 }
     );
   }

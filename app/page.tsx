@@ -1,71 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { loadProducts } from "@/lib/loadProducts";
-const products = loadProducts() as any[];
 import { CategoryNav } from "@/components/CategoryNav";
 import { ProductCard } from "@/components/ProductCard";
-
 export default function Home() {
-  const featured = products.slice(0, 4);
-  const rest = products.slice(4);
-
-  return (
-    // Wider wrapper so more columns can fit; centered with small side padding
-    <div className="space-y-10 max-w-[1800px] mx-auto px-3">
-      <section className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-bold">
-          Save Time. Reduce Errors. Improve Outcomes.
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Comprehensive journals, trackers, checklists, templates and e-books — empowering teams to stay organized and deliver results without delays.
-        </p>
-        <div className="flex items-center justify-center gap-4">
-          <Link href="/categories/Templates" className="brand-btn">Browse Templates</Link>
-          <Link href="/catalog" className="px-5 py-3 border rounded-xl hover:bg-gray-50">View Full Catalog</Link>
-        </div>
-      </section>
-
-      <CategoryNav />
-
-      {/* Featured — auto-fit so no empty columns; smaller min width to allow more columns */}
-      <section className="grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-        {featured.map((p) => (
-          <ProductCard key={p.slug} product={p as any} />
-        ))}
-      </section>
-
-      {/* Rest — auto-fit, multiple rows automatically; same min width */}
-      <section className="mt-10 grid gap-6 items-stretch [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-        {rest.map((p) => (
-          <ProductCard key={p.slug} product={p as any} />
-        ))}
-      </section>
-
-      <section className="rounded-2xl bg-gray-50 p-6">
-        <h2 className="text-2xl font-semibold mb-2">What Readers say</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {featured
-            .flatMap((p: any) => p.testimonials || [])
-            .slice(0, 3)
-            .map((t, i) => (
-              <blockquote key={i} className="p-4 bg-white rounded-xl shadow-sm">
-                <p className="italic">“{t.text}”</p>
-                <div className="mt-2 text-sm text-gray-500">— {t.name}</div>
-              </blockquote>
-            ))}
-        </div>
-      </section>
-
-      <section className="surface p-8 sm:p-10 text-center space-y-4">
-        <h1 className="h1">Build faster with proven templates</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Project management templates (Excel, Word, Google Sheets), construction checklists,
-          journals, reports, e-books, SOPs, and admin trackers — with instant digital downloads.
-        </p>
-        <div className="flex items-center justify-center gap-3">
-          <a href="/categories/Templates" className="brand-btn">Browse Templates</a>
-          <a href="/catalog" className="ghost-btn">View Full Catalog</a>
-        </div>
-      </section>
-    </div>
-  );
+  const products = loadProducts();
+  return <div className="home-page"><section className="home-hero container"><div><p className="eyebrow">WORKFLOWKITS · RESOURCES & BUSINESS SOFTWARE</p><h1>Less starting<br />from scratch.<br /><span>More moving forward.</span></h1><p className="hero-description">Useful templates for your next project. Practical software for your growing business. Find a better starting point, right here.</p><div className="hero-actions"><Link className="brand-btn" href="/catalog">Explore resources <span aria-hidden="true">→</span></Link><Link className="text-link" href="/business-software">Discover WDT software ↗</Link></div><p className="hero-footnote">Project management · Construction · Business operations</p></div><div className="resource-preview"><div className="preview-toolbar"><span>YOUR NEXT PROJECT STARTS HERE</span><span aria-hidden="true">● ● ●</span></div><div className="preview-cover"><Image src="/images/products/project-charter-template.webp" alt="Preview of the Advanced Project Charter Template" width={520} height={400} priority sizes="(max-width: 700px) 90vw, 480px" /></div><div className="preview-caption"><div><span className="eyebrow">FEATURED RESOURCE</span><h2>Give your project a clear beginning.</h2></div><Link href="/products/project-charter-template" aria-label="View the project charter template">↗</Link></div></div></section><div className="home-strip"><div className="container"><span>A PRACTICAL PLACE TO START</span><strong>Plan with structure</strong><i aria-hidden="true">✦</i><strong>Keep work organised</strong><i aria-hidden="true">✦</i><strong>Run your business</strong></div></div><section className="container home-section"><div className="section-title"><div><p className="eyebrow">FIND YOUR STARTING POINT</p><h2>For the work<br />you have ahead.</h2></div><p>Browse resources by purpose, from project planning documents to everyday trackers and business tools.</p></div><CategoryNav /></section><section className="container home-section resource-section"><div className="section-title"><div><p className="eyebrow">FROM THE RESOURCE LIBRARY</p><h2>A head start on your next task.</h2></div><Link className="text-link" href="/catalog">View all resources →</Link></div><div className="resource-grid">{products.slice(0, 6).map((product: any) => <ProductCard key={product.slug} product={product} />)}</div></section><section className="software-spotlight"><div className="container"><div><p className="eyebrow">INTRODUCING WDT BUSINESS SOFTWARES</p><h2>From planning the work<br />to running the business.</h2><p>Meet our growing family of business applications. Start with WDT POS to connect checkout, stock, staff and reporting in your business workspace.</p><Link className="brand-btn" href="/business-software">Explore business software <span aria-hidden="true">↗</span></Link></div><div className="pos-spotlight-card"><span className="software-label">AVAILABLE NOW</span><div className="pos-monogram" aria-hidden="true">W</div><h3>WDT POS</h3><p>Sales. Stock. People.<br />One business workspace.</p><a href="https://pos.workflowkits.com/">Open WDT POS ↗</a></div></div></section><section className="container home-section home-steps"><div><p className="eyebrow">A SIMPLE START</p><h2>Find it. Make it yours.<br />Get to work.</h2><p>Resources give you a starting structure. Review and adapt each document to your project, organisation and requirements.</p></div><ol>{[["Choose a resource", "Browse the library and check the description, format and included features."], ["Sign in for your download", "Create a WorkflowKits resource account or sign in, then request your download link."], ["Adapt it to your work", "Use the file in its supported software and tailor it to your own requirements."]].map(([title, body]) => <li key={title}><h3>{title}</h3><p>{body}</p></li>)}</ol></section><section className="container home-final"><div><p className="eyebrow">YOUR NEXT GOOD START</p><h2>Something useful<br />for the work ahead.</h2></div><div><Link className="brand-btn" href="/catalog">Browse the resource library →</Link><Link className="text-link" href="/contact">Need help finding something?</Link></div></section></div>;
 }

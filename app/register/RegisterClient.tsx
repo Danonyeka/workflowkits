@@ -3,6 +3,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { returnPath } from "@/lib/returnPath";
 
 export default function RegisterClient() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ export default function RegisterClient() {
 
   const router = useRouter();
   const sp = useSearchParams();
-  const next = sp?.get("next") ?? "/";
+  const next = returnPath(sp?.get("next"));
 
   const waitUntilSessionVisible = async () => {
     const started = Date.now();
@@ -64,24 +65,30 @@ export default function RegisterClient() {
   };
 
   return (
-    <div className="max-w-md mx-auto surface p-6 space-y-4">
+    <form className="auth-page mx-auto surface space-y-5" onSubmit={(event) => { event.preventDefault(); void submit(); }}>
       <h1 className="h2">Create account</h1>
+      <p>Create your WorkflowKits resource account to request download links.</p>
+      <label>Email address
       <input
         className="input"
         placeholder="Email"
         type="email"
+        required autoComplete="username" name="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+      </label><label>Password
       <input
         className="input"
         placeholder="Password"
         type="password"
+        required autoComplete="new-password" name="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      {err && <div className="text-sm text-red-600">{err}</div>}
-      <button className="brand-btn w-full" disabled={loading} onClick={submit}>
+      </label>{err && <div role="alert" className="text-sm text-red-700">{err}</div>}
+      <p className="text-xs">See how account information is used in our <a className="underline" href="/privacy">privacy notice</a>.</p>
+      <button type="submit" className="brand-btn w-full" disabled={loading}>
         {loading ? "Creating account..." : "Create account"}
       </button>
       <p className="text-xs text-gray-500">
@@ -90,6 +97,7 @@ export default function RegisterClient() {
           Sign in
         </a>
       </p>
-    </div>
+      <p className="text-xs">Need a POS business account? <a className="underline" href="https://pos.workflowkits.com/">Register inside WDT POS ↗</a></p>
+    </form>
   );
 }

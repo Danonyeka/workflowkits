@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-email/components": "latest",
-    "@react-email/render": "latest",
+    "@react-email/components": "1.0.12",
+    "@react-email/render": "2.3.1",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
-    "next": "14.2.5",
+    "next": "14.2.35",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "resend": "^6.1.3"

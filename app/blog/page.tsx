@@ -1,21 +1,5 @@
-export const metadata = { title: "Blog — WorkflowKits" };
-
+import Link from "next/link";
+export const metadata = { title: "Practical Guides | WorkflowKits", description: "Simple guides to adapting templates, planning projects and choosing your business tools." };
 export default function BlogPage() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Blog</h1>
-      <p className="text-gray-600">
-        Tips, templates, and case studies for project and construction management.
-      </p>
-
-      {/* Replace with a CMS or markdown later */}
-      <article className="p-5 border rounded-2xl">
-        <h2 className="text-xl font-semibold mb-2">Kickstart your project with a ready RFI tracker</h2>
-        <p className="text-sm text-gray-600">3 min read • Templates</p>
-        <p className="mt-3">
-          A lightweight RFI tracker can cut weekly reporting time by 30–40%. Here’s how to set one up…
-        </p>
-      </article>
-    </div>
-  );
+  return <article className="editorial"><header className="page-heading"><p className="eyebrow">WORKFLOWKITS GUIDES</p><h1>Put a good starting<br />point to work.</h1><p>Short, practical guidance for choosing resources and making them useful in your own work.</p></header><nav aria-label="Guide topics" className="catalog-categories"><a href="#templates">Using templates</a><a href="#project-planning">Project planning</a><a href="#business-software">Business software</a></nav><section id="templates"><h2>Make a template your own</h2><p>A template provides structure. Its value comes from adapting that structure to the people, decisions and requirements in your project.</p><ol><li>Read the description and check the file format before requesting the download.</li><li>Keep an unchanged copy. Create a working version with a clear name and date.</li><li>Replace examples and placeholders. Remove sections that do not apply, and add the information your team needs.</li><li>Check formulas, references, assumptions and responsibilities before sharing or approving the document.</li></ol><p><Link href="/catalog">Explore the resource library →</Link></p></section><section id="project-planning"><h2>Give a project a clear beginning</h2><p>Start by agreeing on the purpose, expected outcomes and boundaries of the work. Record who owns decisions, which assumptions need checking and how progress will be reviewed.</p><p>A charter can help you organise that conversation. Follow it with a plan that sets out responsibilities, milestones, risks and the process for handling change. Review these documents with the people who will use them.</p><p><Link href="/products/project-charter-template">View the project charter template →</Link></p></section><section id="business-software"><h2>Choose software around your daily work</h2><p>List the tasks your team performs most often: serving a customer, receiving stock, reviewing a sale or checking a report. Use those tasks to assess whether an application suits your operation.</p><p>Before relying on a system for live trading, set up your catalogue and team access, check the subscription terms and test your usual workflow. Prepare and test any offline features while connected.</p><p><Link href="/business-software">Discover WDT Business Softwares →</Link></p></section></article>;
 }

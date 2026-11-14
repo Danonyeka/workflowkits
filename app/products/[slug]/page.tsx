@@ -4,12 +4,17 @@ import Link from "next/link";
 import { loadProducts } from "@/lib/loadProducts";
 import Reviews from "@/components/Reviews";
 import DownloadCTA from "@/components/DownloadCTA";  // <-- import the client component
+import { notFound } from "next/navigation";
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const product = loadProducts().find((item: any) => item.slug === params.slug);
+  return product ? { title: `${product.title} | WorkflowKits`, description: String(product.short || "").replace(/\*\*/g, ""), alternates: { canonical: `https://workflowkits.com/products/${product.slug}` } } : { title: "Resource not found | WorkflowKits", robots: { index: false } };
+}
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const products = loadProducts() as any[];
   const product = products.find((p) => p.slug === params.slug);
 
-  if (!product) return <div className="container py-10">Product not found</div>;
+  if (!product) return notFound();
 
   return (
     <div className="grid lg:grid-cols-2 gap-8">
@@ -23,7 +28,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       {/* Details */}
       <div className="space-y-5">
         <h1 className="h2">{product.title}</h1>
-        <p className="text-gray-600">{product.short}</p>
+        <p className="text-gray-600">{String(product.short || "").replace(/\*\*/g, "")}</p>
 
         <ul className="list-disc pl-5 space-y-2 text-gray-700">
   {product.features?.map((f: any, i: number) => {
@@ -42,7 +47,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
         {/* Download (client) + Back */}
         <div className="flex flex-wrap gap-3">
-          <DownloadCTA slug={product.slug} />   {/* <-- only this renders the button */}
+          {product.slug === "project-status-report-tepmplate" ? <p className="rounded-lg border border-cyan-200 bg-cyan-50 p-4 text-sm">The download file for this resource is being prepared. <Link className="underline" href="/contact">Contact us for help</Link> or browse the available resources.</p> : <DownloadCTA slug={product.slug} />}
           <Link href="/catalog" className="ghost-btn" aria-label="Back to catalog">Back</Link>
         </div>
 

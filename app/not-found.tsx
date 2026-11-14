@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound() { return <section className="editorial py-8"><p className="eyebrow">PAGE NOT FOUND</p><h1 className="h1 mt-4">Let’s find a better starting point.</h1><p>The page may have moved or the resource may not be available. Browse the library or explore our business applications.</p><div className="flex flex-wrap gap-4 mt-7"><Link className="brand-btn" href="/catalog">Browse resources →</Link><Link className="ghost-btn" href="/business-software">Business software</Link></div></section>; }

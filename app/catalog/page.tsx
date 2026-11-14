@@ -1,23 +1,8 @@
-// app/catalog/page.tsx
+import Link from "next/link";
 import { loadProducts } from "@/lib/loadProducts";
 import { ProductCard } from "@/components/ProductCard";
-
-const products = loadProducts() as any[];
-
+export const metadata = { title: "Resource Library | WorkflowKits", description: "Explore WorkflowKits templates, journals and tools for projects and business operations.", alternates: { canonical: "https://workflowkits.com/catalog" } };
 export default function CatalogPage() {
-  return (
-    <div className="space-y-6 max-w-screen-2xl mx-auto px-4">
-      <header className="text-center space-y-1">
-        <h1 className="text-3xl font-semibold">All Products</h1>
-        <p className="text-gray-600">Browse every template, journal, e-book, and tool.</p>
-      </header>
-
-      {/* Auto-fit keeps rows balanced and centered across breakpoints */}
-      <section className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
-        {products.map((p) => (
-          <ProductCard key={p.slug} product={p as any} />
-        ))}
-      </section>
-    </div>
-  );
+  const products = loadProducts();
+  return <><header className="page-heading"><p className="eyebrow">A BETTER STARTING POINT</p><h1>The resource library.</h1><p>Browse templates, journals and tools. Check the resource details, then sign in to request your download link.</p><nav aria-label="Filter by category" className="catalog-categories">{["Templates", "Journals", "E-Books", "Tools"].map((category) => <Link key={category} href={`/categories/${category}`}>{category}</Link>)}</nav></header><section className="resource-grid" aria-label="Available resources">{products.map((product: any) => <ProductCard key={product.slug} product={product} />)}</section></>;
 }

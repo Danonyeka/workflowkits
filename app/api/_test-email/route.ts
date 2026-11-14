@@ -4,7 +4,8 @@ import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(req: Request) {
+  if (!process.env.ADMIN_PASSWORD || req.headers.get('x-admin') !== process.env.ADMIN_PASSWORD) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   try {
     const apiKey = process.env.RESEND_API_KEY;
     const from = process.env.RESEND_FROM;

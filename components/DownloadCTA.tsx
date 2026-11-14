@@ -6,12 +6,15 @@ import { usePathname, useRouter } from "next/navigation";
 
 export default function DownloadCTA({ slug }: { slug: string }) {
   const [sending, setSending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [failed, setFailed] = useState(false);
   const router = useRouter();
   const pathname = usePathname() || "/";
 
   const sendLink = async () => {
     if (!slug || sending) return;
     setSending(true);
+    setMessage(""); setFailed(false);
 
     try {
       const url = `/api/email-download?slug=${encodeURIComponent(slug)}`;
@@ -31,30 +34,21 @@ export default function DownloadCTA({ slug }: { slug: string }) {
       const data = await res.json().catch(() => ({} as any));
 
       if (!res.ok || !data?.ok) {
-        const err =
-          typeof data?.error === "string"
-            ? data.error
-            : data?.error?.message
-            ? data.error.message
-            : data?.message
-            ? data.message
-            : JSON.stringify(data?.error || data || {});
-
-        alert(`Email failed ❌\n${err}\nTo: ${data?.to ?? "unknown"}`);
+        setFailed(true); setMessage("We couldn’t send your download link. Please try again or contact WorkflowKits support.");
         return;
       }
 
-      alert(`Email queued ✅\nTo: ${data.to}\nMessage ID: ${data.id ?? "(none)"}`);
+      setMessage("Your download link has been sent to your account email. Check your inbox and spam folder.");
     } catch (e: any) {
-      alert(e?.message || "Could not send link");
+      setFailed(true); setMessage("We couldn’t connect. Please check your connection and try again.");
     } finally {
       setSending(false);
     }
   };
 
   return (
-    <button className="brand-btn" onClick={sendLink} disabled={sending}>
+    <div><button className="brand-btn" onClick={sendLink} disabled={sending}>
       {sending ? "Sending link..." : "Email me the download link"}
-    </button>
+    </button>{message && <p role={failed ? "alert" : "status"} className={`mt-3 max-w-sm text-sm ${failed ? "text-red-700" : "text-cyan-900"}`}>{message}</p>}</div>
   );
 }

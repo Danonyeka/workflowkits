@@ -11,7 +11,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Map product slug -> actual filename in data/downloads
 const FILES: Record<string, string> = {
-  "project-charter-template": "project_charter_template.docx",
+  "project-charter-template": "project-charter-template.docx",
   "project-execution-plan": "project-execution-plan.docx",
   "lessons-learned-journal": "lessons-learned-journal.pdf",
   "risk-register": "risk-register.xlsx",
@@ -124,14 +124,13 @@ function renderDownloadEmailHTML(opts: {
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const slug = url.searchParams.get("slug")?.trim();
-  const toOverride = url.searchParams.get("to")?.trim(); // debug only
 
   if (!slug) return NextResponse.json({ ok: false, error: "Missing slug" }, { status: 400 });
   const filename = FILES[slug];
   if (!filename) return NextResponse.json({ ok: false, error: "Unknown product slug" }, { status: 404 });
 
   const session = getSession();
-  const to = toOverride || session?.email;
+  const to = session?.email;
   if (!to) return NextResponse.json({ ok: false, error: "Not logged in" }, { status: 401 });
 
   const secret = process.env.JWT_SECRET;

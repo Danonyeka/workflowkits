@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { Resend } from 'resend'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (!process.env.ADMIN_PASSWORD || req.headers['x-admin'] !== process.env.ADMIN_PASSWORD) return res.status(404).json({ error: 'Not found' });
   try {
     const apiKey = process.env.RESEND_API_KEY
     const from = process.env.RESEND_FROM
