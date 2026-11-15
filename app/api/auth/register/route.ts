@@ -7,6 +7,8 @@ import {
   setSessionCookie,
 } from "@/lib/auth";
 import { randomUUID } from "crypto";
+import { TERMS_VERSION, termsAcceptanceError } from "@/lib/terms";
+import { registrationStorageReady } from "@/lib/account-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,7 +20,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "Method not allowed" }, { status: 405 });
     }
 
-    const { email, password, name } = await req.json();
+    const { email, password, name, acceptedTerms, termsVersion } = await req.json();
+    const acceptanceError = termsAcceptanceError(acceptedTerms, termsVersion);
+    if (acceptanceError) {
+      return NextResponse.json({ ok: false, error: acceptanceError }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    }
 
     // Basic validation
     if (!email || !password) {
@@ -28,8 +34,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!registrationStorageReady()) return NextResponse.json({ ok: false, error: "New account registration is awaiting private account-storage setup. Existing accounts can still sign in." }, { status: 503, headers: { "Cache-Control": "no-store" } });
     const normEmail = String(email).trim().toLowerCase();
-    const users = readUsers();
+    const users = await readUsers();
 
     if (users.some((u) => u.email.toLowerCase() === normEmail)) {
       return NextResponse.json(
@@ -45,10 +52,11 @@ export async function POST(req: NextRequest) {
       name: name ? String(name).trim() : undefined,
       passwordHash,
       createdAt: new Date().toISOString(),
+      termsAcceptance: { version: TERMS_VERSION, acceptedAt: new Date().toISOString() },
     };
 
     users.push(user);
-    writeUsers(users);
+    await writeUsers(users);
 
     // sign in immediately
     setSessionCookie({ id: user.id, email: user.email });
@@ -59,8 +67,8 @@ export async function POST(req: NextRequest) {
     );
   } catch (e: any) {
     return NextResponse.json(
-      { ok: false, error: e?.message || "Registration failed" },
-      { status: 500, headers: { "Cache-Control": "no-store" } }
+      { ok: false, error: e?.code === "23505" ? "This email already has an account. Please sign in." : "Registration could not be completed. Please try again or contact support." },
+      { status: e?.code === "23505" ? 409 : 500, headers: { "Cache-Control": "no-store" } }
     );
   }
 }

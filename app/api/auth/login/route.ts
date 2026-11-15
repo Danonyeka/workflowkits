@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "Email and password are required" }, { status: 400 });
     }
 
-    const users = readUsers();
+    const users = await readUsers();
     const user = users.find(
       (u) => u.email.toLowerCase() === String(email).toLowerCase()
     );
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (e: any) {
     return NextResponse.json(
-      { ok: false, error: e?.message || "Login failed" },
+      { ok: false, error: "Sign-in is temporarily unavailable. Please try again or contact support." },
       { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import fs from "fs";
 import path from "path";
 import * as bcrypt from "bcryptjs";
+import { accountDatabaseConfigured, databaseUsers, saveDatabaseUsers, registrationStorageReady } from "./account-store";
 
 // ---------- constants ----------
 export const AUTH_COOKIE = "wk_session";
@@ -32,6 +33,9 @@ export type User = {
   name?: string;
   passwordHash: string;
   createdAt: string;
+  termsAcceptance?: { version: string; acceptedAt: string };
+  googleSubject?: string;
+  emailVerifiedAt?: string;
 };
 
 function ensureUsersFile() {
@@ -40,11 +44,16 @@ function ensureUsersFile() {
     fs.writeFileSync(USERS_PATH, "[]", "utf8");
   }
 }
-export function readUsers(): User[] {
-  ensureUsersFile();
+function legacyUsers(): User[] {
+  if (!fs.existsSync(USERS_PATH)) return [];
   return JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
 }
-export function writeUsers(users: User[]) {
+export async function readUsers(): Promise<User[]> {
+  return accountDatabaseConfigured() ? databaseUsers(legacyUsers) : legacyUsers();
+}
+export async function writeUsers(users: User[]) {
+  if (accountDatabaseConfigured()) return saveDatabaseUsers(users, legacyUsers);
+  if (!registrationStorageReady()) throw new Error("New account registration is awaiting private account-storage setup. Existing accounts can still sign in.");
   ensureUsersFile();
   fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2), "utf8");
 }

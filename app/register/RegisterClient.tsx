@@ -2,12 +2,17 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { returnPath } from "@/lib/returnPath";
+import { TERMS_VERSION } from "@/lib/terms";
+import GoogleAccess from "@/components/GoogleAccess";
 
 export default function RegisterClient() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [registrationAvailable, setRegistrationAvailable] = useState<boolean | null>(null);
+  useEffect(() => { let active = true; fetch("/api/auth/google/config", { cache: "no-store" }).then(response => response.json()).then(data => { if (active) setRegistrationAvailable(data.registrationAvailable !== false); }).catch(() => {}); return () => { active = false; }; }, []);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -35,6 +40,10 @@ export default function RegisterClient() {
   const submit = async () => {
     if (loading) return;
     setErr(null);
+    if (!acceptedTerms) {
+      setErr("Please accept the Terms and Conditions before creating an account.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
@@ -42,7 +51,7 @@ export default function RegisterClient() {
         credentials: "include",
         cache: "no-store",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, acceptedTerms, termsVersion: TERMS_VERSION }),
       });
       const data = await res.json();
 
@@ -68,6 +77,8 @@ export default function RegisterClient() {
     <form className="auth-page mx-auto surface space-y-5" onSubmit={(event) => { event.preventDefault(); void submit(); }}>
       <h1 className="h2">Create account</h1>
       <p>Create your WorkflowKits resource account to request download links.</p>
+      {registrationAvailable === false && <p role="status" className="google-note">New account registration is awaiting private account-storage setup. Existing accounts can still sign in.</p>}
+      <GoogleAccess mode="register" next={next} acceptedTerms={acceptedTerms} />
       <label>Email address
       <input
         className="input"
@@ -87,8 +98,9 @@ export default function RegisterClient() {
         onChange={(e) => setPassword(e.target.value)}
       />
       </label>{err && <div role="alert" className="text-sm text-red-700">{err}</div>}
-      <p className="account-legal-links">Before creating an account, please read our <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Notice</a>.</p>
-      <button type="submit" className="brand-btn w-full" disabled={loading}>
+      <div className="terms-acceptance"><input id="accept-terms" name="acceptedTerms" type="checkbox" required checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} aria-describedby="accept-terms-help" /><label htmlFor="accept-terms">I have read and accept the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions<span className="sr-only"> (opens in a new tab)</span></a>.</label></div>
+      <p id="accept-terms-help" className="account-legal-links">Acceptance is required to create an account. See our <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Notice</a> for how account information is used.</p>
+      <button type="submit" className="brand-btn w-full" disabled={loading || !acceptedTerms || registrationAvailable === false}>
         {loading ? "Creating account..." : "Create account"}
       </button>
       <p className="text-xs text-gray-500">

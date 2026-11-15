@@ -4,6 +4,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { returnPath } from "@/lib/returnPath";
+import GoogleAccess from "@/components/GoogleAccess";
 
 export default function LoginClient() {
   const [email, setEmail] = useState("");
@@ -71,6 +72,7 @@ export default function LoginClient() {
       <h1 className="h2">Sign in</h1>
       <p>Welcome back. Sign in to your WorkflowKits resource account.</p>
       <p className="account-legal-links">Review our <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Notice</a>.</p>
+      <GoogleAccess mode="login" next={next} />
       <label>Email address
       <input
         className="input"
