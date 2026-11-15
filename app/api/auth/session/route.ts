@@ -6,8 +6,8 @@ import { getSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export function GET() {
-  const s = getSession(); // sync
+export async function GET() {
+  const s = await getSession();
   return NextResponse.json(
     { ok: !!s, user: s ?? null, ts: Date.now() },
     {

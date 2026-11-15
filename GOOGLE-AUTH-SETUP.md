@@ -21,6 +21,7 @@ The current source no longer tracks `.env.local` or actual account records. Prod
 - Google ID tokens are verified server-side by Google's official library and bound to a short-lived browser challenge.
 - New Google registration supports Gmail and verified Google Workspace identities. Other Google email addresses need a separate ownership-verification flow and cannot register through Google yet.
 - New registrations record the accepted terms version and server time. Existing users are not assigned fabricated acceptance records.
-- Matching email addresses are never silently linked to existing password accounts.
+- Matching existing accounts sign in directly when Google's verified token establishes Gmail or Workspace email ownership. Other Google email providers still require the existing website password. A different previously linked Google subject is always rejected.
+- Email accounts can request `/forgot-password`. Apply `migrations/002-password-recovery.sql` before deploying recovery. Reset links expire after 30 minutes, are stored only as hashes and are consumed once; resetting a password increments the account session version to invalidate old website sessions. `scripts/test-recovery-integration.cjs` verifies this flow in a disposable isolated database schema without sending email or touching subscriber records.
 
 Local tests use mocked Google identities and rejected registration requests; no real account acceptance is performed on behalf of the owner.

@@ -91,7 +91,7 @@ export default function LoginClient() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      </label>{err && <div role="alert" className="text-sm text-red-700">{err}</div>}
+      </label><p className="text-sm"><a className="underline" href="/forgot-password">Forgot password?</a></p>{err && <div role="alert" className="text-sm text-red-700">{err}</div>}
       <button type="submit" className="brand-btn w-full" disabled={loading}>
         {loading ? "Signing in..." : "Sign in"}
       </button>

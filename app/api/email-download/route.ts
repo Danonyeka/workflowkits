@@ -129,7 +129,7 @@ export async function GET(req: NextRequest) {
   const filename = FILES[slug];
   if (!filename) return NextResponse.json({ ok: false, error: "Unknown product slug" }, { status: 404 });
 
-  const session = getSession();
+  const session = await getSession();
   const to = session?.email;
   if (!to) return NextResponse.json({ ok: false, error: "Not logged in" }, { status: 401 });
 

@@ -5,9 +5,14 @@ let pool: Pool | undefined;
 let initialising: Promise<void> | undefined;
 export function accountDatabaseConfigured() { return !!process.env.ACCOUNT_DATABASE_URL; }
 export function registrationStorageReady() { return accountDatabaseConfigured() || process.env.NODE_ENV !== "production"; }
-function database() {
+export function database() {
   if (!process.env.ACCOUNT_DATABASE_URL) throw new Error("Private account storage is not configured.");
   return pool ||= new Pool({ connectionString: process.env.ACCOUNT_DATABASE_URL, max: 3, idleTimeoutMillis: 10000, connectionTimeoutMillis: 10000 });
+}
+export async function accountSessionVersion(id: string) {
+  if (!accountDatabaseConfigured()) return 0;
+  const result = await database().query("SELECT record->>'sessionVersion' AS version FROM workflowkits_resource_accounts WHERE id=$1", [id]);
+  return Number(result.rows[0]?.version || 0);
 }
 async function ready(legacy: () => User[]) {
   if (!initialising) initialising = (async () => {
@@ -28,7 +33,7 @@ export async function saveDatabaseUsers(users: User[], legacy: () => User[]) {
   try {
     await client.query("BEGIN");
     for (const user of users) {
-      const result = await client.query("INSERT INTO workflowkits_resource_accounts AS accounts(id,email,google_subject,record) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET email=EXCLUDED.email,google_subject=COALESCE(accounts.google_subject,EXCLUDED.google_subject),record=accounts.record || EXCLUDED.record WHERE accounts.google_subject IS NULL OR EXCLUDED.google_subject IS NULL OR accounts.google_subject=EXCLUDED.google_subject", [user.id, user.email.toLowerCase(), user.googleSubject || null, JSON.stringify(user)]);
+      const result = await client.query("INSERT INTO workflowkits_resource_accounts AS accounts(id,email,google_subject,record) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET email=EXCLUDED.email,google_subject=COALESCE(accounts.google_subject,EXCLUDED.google_subject),record=accounts.record || EXCLUDED.record WHERE (accounts.google_subject IS NULL OR EXCLUDED.google_subject IS NULL OR accounts.google_subject=EXCLUDED.google_subject) AND COALESCE((accounts.record->>'sessionVersion')::int,0)=COALESCE((EXCLUDED.record->>'sessionVersion')::int,0)", [user.id, user.email.toLowerCase(), user.googleSubject || null, JSON.stringify(user)]);
       if (result.rowCount !== 1) throw new Error("This account changed. Please start again.");
     }
     await client.query("COMMIT");

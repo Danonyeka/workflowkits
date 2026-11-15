@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import fs from "fs";
 import path from "path";
 import * as bcrypt from "bcryptjs";
-import { accountDatabaseConfigured, databaseUsers, saveDatabaseUsers, registrationStorageReady } from "./account-store";
+import { accountDatabaseConfigured, databaseUsers, saveDatabaseUsers, registrationStorageReady, accountSessionVersion } from "./account-store";
 
 // ---------- constants ----------
 export const AUTH_COOKIE = "wk_session";
@@ -36,6 +36,7 @@ export type User = {
   termsAcceptance?: { version: string; acceptedAt: string };
   googleSubject?: string;
   emailVerifiedAt?: string;
+  sessionVersion?: number;
 };
 
 function ensureUsersFile() {
@@ -68,7 +69,7 @@ export async function verifyPassword(pw: string, hash: string) {
 }
 
 // ---------- session helpers ----------
-export function setSessionCookie(payload: { id: string; email: string }) {
+export function setSessionCookie(payload: { id: string; email: string; sessionVersion?: number }) {
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error("JWT_SECRET is not set");
   const token = jwt.sign(payload, secret, { expiresIn: "7d" });
@@ -105,19 +106,21 @@ export function clearSessionCookie() {
   }
 }
 
-export function getSession(): { id: string; email: string } | null {
-  const token = cookies().get(AUTH_COOKIE)?.value;
+export async function verifySessionToken(token?: string): Promise<{ id: string; email: string } | null> {
   if (!token) return null;
   try {
     const secret = process.env.JWT_SECRET;
     if (!secret) return null;
-    return jwt.verify(token, secret) as any; // { id, email, iat, exp }
+    const payload = jwt.verify(token, secret) as { id: string; email: string; sessionVersion?: number };
+    if (!payload.id || !payload.email || (payload.sessionVersion || 0) !== await accountSessionVersion(payload.id)) return null;
+    return { id: payload.id, email: payload.email };
   } catch {
     return null;
   }
 }
-export function getSessionEmail(): string | null {
-  const s = getSession();
+export async function getSession() { return verifySessionToken(cookies().get(AUTH_COOKIE)?.value); }
+export async function getSessionEmail(): Promise<string | null> {
+  const s = await getSession();
   return s?.email ?? null;
 }
 

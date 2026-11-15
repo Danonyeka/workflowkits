@@ -48,7 +48,7 @@ export async function handleGoogle(req: NextRequest, finish: boolean) {
     const identity = await verifyGoogleCredential(credential, nonce, googleClientId);
     const result = await resolveGoogleAccount(identity, { ...body, kind: finish ? body.kind : "start" }, { readUsers, writeUsers, hashPassword, verifyPassword, termsError: termsAcceptanceError, termsVersion: TERMS_VERSION, now: () => new Date().toISOString() });
     if (result.mode === "signed-in") {
-      setSessionCookie({ id: result.user.id, email: result.user.email });
+      setSessionCookie({ id: result.user.id, email: result.user.email, sessionVersion: result.user.sessionVersion });
       const response = NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
       response.cookies.set(nonceCookie, "", { ...cookieOptions, maxAge: 0 });
       response.cookies.set(pendingCookie, "", { ...cookieOptions, maxAge: 0 });

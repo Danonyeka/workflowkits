@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Set cookie
-    setSessionCookie({ id: user.id, email: user.email });
+    setSessionCookie({ id: user.id, email: user.email, sessionVersion: user.sessionVersion });
 
     // Return minimal user info + no-store headers
     return NextResponse.json(

@@ -10,7 +10,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: NextRequest) {
   try {
-    const sess = getSession();
+    const sess = await getSession();
     if (!sess?.email) {
       return NextResponse.json({ error: "Not signed in" }, { status: 401 });
     }

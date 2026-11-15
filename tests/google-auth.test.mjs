@@ -34,7 +34,16 @@ test('Google registration stores the verified subject and server-timestamped ter
   assert.equal((await resolveGoogleAccount(identity, { kind: 'start' }, f.deps)).user.id, first.user.id);
   assert.equal(f.records().length, 1); assert.equal(f.writes(), 1);
 });
-test('matching email never silently links an existing password account', async () => {
+test('authoritative Google identity signs into the matching existing account without its password', async () => {
+  const f = fixture([{ id: 'legacy', email: identity.email, passwordHash: 'legacy-hash', createdAt: '2025-01-01' }]);
+  const result = await resolveGoogleAccount(identity, { kind: 'start' }, f.deps);
+  assert.equal(result.mode, 'signed-in'); assert.equal(result.user.id, 'legacy');
+  assert.equal(result.user.passwordHash, 'legacy-hash'); assert.equal(result.user.googleSubject, identity.subject);
+  assert.equal(result.user.termsAcceptance, undefined); assert.equal(f.records().length, 1);
+});
+
+test('non-authoritative Google email still requires the existing account password', async () => {
+  const identity = { subject: claims.sub, email: claims.email, authoritativeEmail: false };
   const f = fixture([{ id: 'legacy', email: identity.email, passwordHash: 'legacy-hash', createdAt: '2025-01-01' }]);
   assert.equal((await resolveGoogleAccount(identity, { kind: 'start' }, f.deps)).mode, 'link');
   assert.equal(f.writes(), 0);

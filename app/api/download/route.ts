@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
     }
   } else if (fileParam) {
     // Require session for raw file param to avoid open downloads
-    const session = getSession();
+    const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
     }
   } else if (slugParam) {
     // Optional convenience: map slug to file but still require session
-    const session = getSession();
+    const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
