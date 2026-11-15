@@ -36,3 +36,13 @@
 @media(max-width:700px){.wrap{width:calc(100% - 40px)}.hero{grid-template-columns:1fr;padding-top:42px;padding-bottom:47px;gap:38px}.hero h1{font-size:49px;letter-spacing:-2.5px}.heroTagline{font-size:22px}.heroArt{transform:none;max-width:460px;width:100%;margin:auto}.artContent h2{font-size:32px}.sectionHeading{display:block}.sectionHeading>p{margin-top:20px}.directory{padding-top:50px;padding-bottom:50px}.product{grid-template-columns:1fr}.productIntro{border-right:0;border-bottom:1px solid var(--line);padding:26px}.featureGrid{padding:26px;gap:28px 22px}.featureGrid h4{font-size:19px}.productFoot{align-items:flex-start;flex-direction:column;gap:6px;padding:17px 26px}.comingSoon{padding:24px;gap:14px;align-items:flex-start}.comingSoon>div{flex:1;min-width:190px}.comingSoon h3{font-size:20px}.futureLabel{margin-left:44px}.how>.wrap,.faq{grid-template-columns:1fr;gap:32px;padding-top:50px;padding-bottom:50px}.principles>.wrap{justify-content:center;gap:12px 20px}.principles span{width:100%;text-align:center}.principles strong{font-size:11px}.principles i{display:none}.final{padding:50px 0}.faq{gap:35px}.eyebrow{font-size:9px}.artHeader{padding:18px 22px}}
 @media(max-width:360px){.hero h1{font-size:42px}.featureGrid{grid-template-columns:1fr}.appTile>.available{margin-left:64px}.comingSoon>div{min-width:150px}}
 @media(prefers-reduced-motion:reduce){.primary{transition:none}}
+
+:global(html[data-theme=dark]) .page{--ink:#e4edf0;--muted:#adbdc5;--line:#344b57;--cyan:#78d5e2;background:#101f29}
+:global(html[data-theme=dark]) .eyebrow{color:#98c8d2}
+:global(html[data-theme=dark]) .heroArt,:global(html[data-theme=dark]) .product{background:#192e3b;border-color:var(--line)}
+:global(html[data-theme=dark]) .appTile,:global(html[data-theme=dark]) .productIntro,:global(html[data-theme=dark]) .principles,:global(html[data-theme=dark]) .how{background:#172f3c;border-color:var(--line)}
+:global(html[data-theme=dark]) .productFoot{background:#152936;border-color:var(--line)}
+:global(html[data-theme=dark]) .futureTile,:global(html[data-theme=dark]) .comingSoon{border-color:#58727e}
+:global(html[data-theme=dark]) .primary{background:#a5e2eb;color:#102f3c}:global(html[data-theme=dark]) .primary:hover{background:#c7f0f5}
+:global(html[data-theme=dark]) .available{background:#284b3f;color:#c5e9cc}
+:global(html[data-theme=dark]) .principles span,:global(html[data-theme=dark]) .productLabels>span:first-child,:global(html[data-theme=dark]) .domain,:global(html[data-theme=dark]) .productFoot>span{color:#a4cbd5}
