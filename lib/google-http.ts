@@ -5,7 +5,7 @@ import { TERMS_VERSION, termsAcceptanceError } from "./terms";
 import { GoogleAuthError, resolveGoogleAccount, verifyGoogleCredential } from "./google-core.mjs";
 import { registrationStorageReady } from "./account-store";
 
-export const googleClientId = process.env.GOOGLE_CLIENT_ID || "";
+export const googleClientId = (process.env.GOOGLE_CLIENT_ID || "").trim();
 export const googleReady = () => !!googleClientId && !!process.env.JWT_SECRET && registrationStorageReady();
 const production = process.env.NODE_ENV === "production";
 const nonceCookie = production ? "__Host-wk_google_nonce" : "wk_google_nonce";
