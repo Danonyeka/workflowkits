@@ -87,7 +87,7 @@ export default function RegisterClient() {
         onChange={(e) => setPassword(e.target.value)}
       />
       </label>{err && <div role="alert" className="text-sm text-red-700">{err}</div>}
-      <p className="text-xs">See how account information is used in our <a className="underline" href="/privacy">privacy notice</a>.</p>
+      <p className="account-legal-links">Before creating an account, please read our <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Notice</a>.</p>
       <button type="submit" className="brand-btn w-full" disabled={loading}>
         {loading ? "Creating account..." : "Create account"}
       </button>

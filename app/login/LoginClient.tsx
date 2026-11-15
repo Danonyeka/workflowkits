@@ -70,6 +70,7 @@ export default function LoginClient() {
     <form className="auth-page mx-auto surface space-y-5" onSubmit={(event) => { event.preventDefault(); void submit(); }}>
       <h1 className="h2">Sign in</h1>
       <p>Welcome back. Sign in to your WorkflowKits resource account.</p>
+      <p className="account-legal-links">Review our <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Notice</a>.</p>
       <label>Email address
       <input
         className="input"
